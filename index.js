@@ -1,12 +1,16 @@
-const express = require('express')
-const expressGraphql = require('express-graphql')
+const express = require("express")
+const expressGraphql = require("express-graphql")
 
-const schema = require('./lib/todographql')
+const { schemaFactory } = require("./lib/todographql")
 
 const app = express()
 
+const db = loadDb("db.json")
+
+const schema = schemaFactory(db)
+
 app.use(
-  '/graphql',
+  "/graphql",
   expressGraphql({
     schema,
     graphiql: true
