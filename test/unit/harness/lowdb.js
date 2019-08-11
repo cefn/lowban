@@ -1,7 +1,7 @@
 const { writeFileSync, readFileSync, unlinkSync } = require("fs")
 const lowdb = require("lowdb")
 const Memory = require("lowdb/adapters/Memory")
-const { loadDb, LowStore } = require("../../lib/lowstore")
+const { loadDb, LowStore } = require("../../../lib/lowstore")
 
 const defaultDbPath = "/tmp/db.json"
 
@@ -22,19 +22,13 @@ function parseFileDb(testDbPath = defaultDbPath) {
 }
 
 /** Provide a db having the specified content, for which write HAS NO EFFECT */
-function createMemoryDb(data) {
-  return lowdb(new Memory()).defaults(data)
-}
-
-function createMemoryStore(data) {
-  const db = createMemoryDb(data)
-  return new LowStore(db)
+function createMemoryDb(tree) {
+  return lowdb(new Memory()).defaults(tree)
 }
 
 module.exports = {
   deleteFileDb,
   createFileDb,
   parseFileDb,
-  createMemoryDb,
-  createMemoryStore
+  createMemoryDb
 }
