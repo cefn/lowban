@@ -3,10 +3,14 @@ const {
   createFileDb,
   deleteFileDb,
   parseFileDb,
-  createMemoryDb,
-  createMemoryStore
-} = require("./lowstoreharness")
+  createMemoryDb
+} = require("./harness/lowdb")
 const { loadDb, LowStore } = require("../../lib/lowstore")
+
+function mockLowStore(tree) {
+  const db = createMemoryDb(tree)
+  return new LowStore(db)
+}
 
 test("Lodash transformation chain followed by write is reflected in db file", () => {
   const db = createFileDb({ fieldName: "fieldValue" })
@@ -16,7 +20,7 @@ test("Lodash transformation chain followed by write is reflected in db file", ()
 })
 
 test("entitiesByType lists entities of a type", () => {
-  const store = createMemoryStore({
+  const store = mockLowStore({
     song: [
       { id: "0", title: "Baby Shark" },
       { id: "1", title: "Raining Tacos" }
@@ -30,7 +34,7 @@ test("entitiesByType lists entities of a type", () => {
 })
 
 test("entityResolverFactory creates GraphQL resolver listing entities for a type", () => {
-  const store = createMemoryStore({
+  const store = mockLowStore({
     song: [
       { id: "0", title: "Baby Shark" },
       { id: "1", title: "Raining Tacos" }
@@ -46,7 +50,7 @@ test("entityResolverFactory creates GraphQL resolver listing entities for a type
 })
 
 test("getById can retrieve a single typed entity", () => {
-  const store = createMemoryStore({
+  const store = mockLowStore({
     song: [
       { id: "0", title: "Baby Shark" },
       { id: "1", title: "Raining Tacos" }
