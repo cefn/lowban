@@ -1,46 +1,45 @@
-const { createDb, deleteDb, parseDb } = require("../lib/dbscaffold")
+"use strict"
+const { createMemoryDb } = require("./harness/lowdb")
 const { graphql } = require("graphql")
-const { schema } = require("../../lib/taggraphql")
+const { TagStore, defaultTreeFactory } = require("../../lib/tagstore")
+const { schemaFactory } = require("../../lib/taggraphql")
 
-const exampleDb = {
-  task:[
-    {id:"0"}
-  ]
+function mockTagStore(mockTree) {
+  const dbTree = {}
+  Object.assign(dbTree, defaultTreeFactory()) //populate default entity arrays
+  Object.assign(dbTree, mockTree) //overwrite where entity arrays provided by tree
+  return new TagStore(createMemoryDb(dbTree))
 }
 
-{
-  "task": [
-    {
-      "id": "0",
-      "title": "Socks",
-      "content": "Get size 2 school socks ",
-      "tags": "@town, !soon"
+function createSchemaFromTree(tree) {
+  return schemaFactory(mockTagStore(tree))
+}
+
+async function getGraphQlResponse(schema, request, swallowErrors = false) {
+  const response = await graphql(schema, request)
+  //workaround for GraphQL swallowing all errors from backing datastore
+  if (!swallowErrors) {
+    if (response.errors) {
+      for (let error of response.errors) {
+        if (error.originalError) {
+          throw error.originalError
+        } else {
+          throw error
+        }
+      }
     }
-  ],
-  "context": {
-    "@town": {
-      "title": "A retail centre",
-      "content": "In Lancaster, Morecambe or Lunchtime in Lowry Mall in Salford"
-    }
-  },
-  "priority": {
-    "!urgent": {},
-    "!priority": {},
-    "!soon": {},
-    "!wishlist": {}
-  },
-  "status": {
-    "#waiting": {},
-    "#done": {}
-  },
-  "category": {
-    "house": {}
   }
+  return response
 }
 
-
-graphql(schema, `{
-  tags
-}`)
-
-
+test("Schema can list both referenced and declared tags ", async () => {
+  const schema = createSchemaFromTree({
+    task: [{ id: "0", tags: "@home,#done" }],
+    tags: [{ id: "@home", title: "Can be done in the house" }]
+  })
+  const request = `{ tag { id } }`
+  const response = await getGraphQlResponse(schema, request)
+  const actual = new Set(response.data.tag)
+  const expected = new Set([{ id: "@home" }, { id: "#done" }])
+  expect(actual).toEqual(expected)
+})
