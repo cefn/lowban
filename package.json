@@ -21,6 +21,7 @@
     "express-graphql": "^0.8.0",
     "graphql": "^14.4.1",
     "graphql-tools": "^4.0.5",
+    "lodash": "^4.17.15",
     "lowdb": "^1.0.0"
   },
   "devDependencies": {
