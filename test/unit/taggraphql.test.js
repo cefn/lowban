@@ -39,7 +39,8 @@ test("Schema can list both referenced and declared tags ", async () => {
   })
   const request = `{ tag { id } }`
   const response = await getGraphQlResponse(schema, request)
-  const actual = new Set(response.data.tag)
+  const records = response.data.tag
+  const actual = new Set(records)
   const expected = new Set([{ id: "@home" }, { id: "#done" }])
   expect(actual).toEqual(expected)
 })
