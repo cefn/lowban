@@ -19,7 +19,7 @@ test("Lodash transformation chain followed by write is reflected in db file", ()
   deleteFileDb()
 })
 
-test("entitiesByType lists entities of a type", () => {
+test("iterateByType lists entities of a type", () => {
   const store = mockLowStore({
     song: [
       { id: "0", title: "Baby Shark" },
@@ -31,6 +31,15 @@ test("entitiesByType lists entities of a type", () => {
     { id: "0", title: "Baby Shark" },
     { id: "1", title: "Raining Tacos" }
   ])
+})
+
+test("iterateByType throws where top level collections are not arrays", () => {
+  const lowStore = mockLowStore({
+    item: { mockedId: { title: "My ancestor should be an array not a map" } }
+  })
+  expect(() => {
+    const items = [...lowStore.iterateByType("item")]
+  }).toThrow()
 })
 
 test("entityResolverFactory creates GraphQL resolver listing entities for a type", () => {
