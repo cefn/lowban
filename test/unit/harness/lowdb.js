@@ -23,7 +23,7 @@ function parseFileDb(testDbPath = defaultDbPath) {
 
 /** Provide a db having the specified content, for which write HAS NO EFFECT */
 function createMemoryDb(tree) {
-  return lowdb(new Memory()).defaults(tree)
+  return lowdb(new Memory()).defaultsDeep(tree)
 }
 
 module.exports = {
