@@ -6,8 +6,8 @@ const { schemaFactory } = require("../../lib/taggraphql")
 
 function mockTagStore(mockTree) {
   const dbTree = {}
-  Object.assign(dbTree, defaultTreeFactory()) //populate default entity arrays
-  Object.assign(dbTree, mockTree) //overwrite where entity arrays provided by tree
+  Object.assign(dbTree, defaultTreeFactory()) //initialise default tree
+  Object.assign(dbTree, mockTree) //overwrite with mock values
   return new TagStore(createMemoryDb(dbTree))
 }
 
