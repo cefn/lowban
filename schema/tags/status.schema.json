@@ -1,0 +1,21 @@
+{
+  "$id": "https://github.com/cefn/lowban/tree/v0.2.0/schema/tags/status.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "tagIdPattern": {
+      "$comment": "A status tag starts with #",
+      "type": "string",
+      "pattern": "^#.*$"
+    }
+  },
+  "allOf": [
+    { "$ref": "../tag.schema.json#/definitions/tag" },
+    {
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/tagIdPattern"
+        }
+      }
+    }
+  ]
+}

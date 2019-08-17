@@ -1,29 +1,7 @@
 {
-  "$id": "https://github.com/cefn/lowban/schema/db.schema.js",
+  "$id": "https://github.com/cefn/lowban/tree/v0.2.0/schema/db.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "definitions": {
-    "categoryTagIdPattern": {
-      "$comment": "A category tag starts with an alphabetical character",
-      "type": "string",
-      "pattern": "^[a-zA-Z\\d\\s:\\u00C0-\\u00FF].*$"
-    },
-    "priorityTagIdPattern": {
-      "$comment": "A priority tag starts with a bang !",
-      "type": "string",
-      "pattern": "^!.*$"
-    },
-    "contextTagIdPattern": {
-      "$comment": "A context tag starts with @",
-      "type": "string",
-      "pattern": "^@.*$"
-    },
-    "statusTagIdPattern": {
-      "$comment": "A status tag starts with #",
-      "type": "string",
-      "pattern": "^#.*$"
-    }
-  },
   "properties": {
     "task": {
       "type": "array",
@@ -34,61 +12,25 @@
     "category": {
       "type": "array",
       "items": {
-        "allOf": [
-          { "$ref": "./tag.schema.json#/definitions/tag" },
-          {
-            "properties": {
-              "id": {
-                "$ref": "#/definitions/categoryTagIdPattern"
-              }
-            }
-          }
-        ]
+        "$ref": "./tags/category.schema.json"
       }
     },
     "priority": {
       "type": "array",
       "items": {
-        "allOf": [
-          { "$ref": "./tag.schema.json#/definitions/tag" },
-          {
-            "properties": {
-              "id": {
-                "$ref": "#/definitions/priorityTagIdPattern"
-              }
-            }
-          }
-        ]
+        "$ref": "./tags/priority.schema.json"
       }
     },
     "context": {
       "type": "array",
       "items": {
-        "allOf": [
-          { "$ref": "./tag.schema.json#/definitions/tag" },
-          {
-            "properties": {
-              "id": {
-                "$ref": "#/definitions/contextTagIdPattern"
-              }
-            }
-          }
-        ]
+        "$ref": "./tags/context.schema.json"
       }
     },
     "status": {
       "type": "array",
       "items": {
-        "allOf": [
-          { "$ref": "./tag.schema.json#/definitions/tag" },
-          {
-            "properties": {
-              "id": {
-                "$ref": "#/definitions/statusTagIdPattern"
-              }
-            }
-          }
-        ]
+        "$ref": "./tags/status.schema.json"
       }
     }
   }
