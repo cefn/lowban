@@ -4,18 +4,22 @@
   "type": "object",
   "definitions": {
     "categoryTagIdPattern": {
+      "$comment": "A category tag starts with an alphabetical character",
       "type": "string",
       "pattern": "^[a-zA-Z\\d\\s:\\u00C0-\\u00FF].*$"
     },
     "priorityTagIdPattern": {
+      "$comment": "A priority tag starts with a bang !",
       "type": "string",
       "pattern": "^!.*$"
     },
     "contextTagIdPattern": {
+      "$comment": "A context tag starts with @",
       "type": "string",
       "pattern": "^@.*$"
     },
     "statusTagIdPattern": {
+      "$comment": "A status tag starts with #",
       "type": "string",
       "pattern": "^#.*$"
     }
