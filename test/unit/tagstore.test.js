@@ -1,6 +1,9 @@
 const _ = require("lodash")
 const { createMemoryDb } = require("./harness/lowdb")
-const { iterateStoredTypes } = require("../../lib/tagmodel")
+const {
+  iterateStoredTypes,
+  iterateTraversableTypes
+} = require("../../lib/tagmodel")
 const { defaultTreeFactory, TagStore } = require("../../lib/tagstore")
 
 function mockTagStore(tree) {
@@ -15,6 +18,12 @@ test("Default data conforms to db structure", () => {
     typeNames.includes(typeName)
     Array.isArray(typeCollection)
   }
+})
+
+test("tags are traversable even though not stored", () => {
+  const storedTypes = [...iterateStoredTypes()]
+  const traversableTypes = [...iterateTraversableTypes()]
+  expect(_.difference(traversableTypes, storedTypes)).toEqual(["tag"])
 })
 
 test("lazyCreateTag populates tag when not in database", () => {
@@ -62,6 +71,17 @@ test("iterateAllTagIds includes ids from declared tags and transient tags", () =
     "#which"
   ])
   expect(actual).toEqual(expected)
+})
+
+test("iterateAllTagIds() reports each tag only once", () => {
+  const tagStore = mockTagStore({
+    task: [{ id: "0", tags: "this, that" }],
+    category: [{ id: "this" }, { id: "that" }]
+  })
+  const tagIds = [...tagStore.iterateAllTagIds()]
+  expect(tagIds).toContain("this")
+  expect(tagIds).toContain("that")
+  expect(tagIds.length).toEqual(2)
 })
 
 test("iterateAllTags includes tags from declared tags and transient tags", () => {

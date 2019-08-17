@@ -33,3 +33,9 @@ test("getTaskTagIds() splits tags property of task object", () => {
   const result = getTaskTagIds(task)
   expect([...result]).toEqual(["!urgent", "@home", "#done", "housework"])
 })
+
+test("getTaskTagIds() handles missing tags property", () => {
+  const task = {}
+  const result = getTaskTagIds(task)
+  expect([...result]).toEqual([])
+})
