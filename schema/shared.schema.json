@@ -1,0 +1,15 @@
+{
+  "$id": "https://github.com/cefn/lowban/schema/shared.schema.js",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "item": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "text": { "type": "string" }
+      },
+      "required": ["id"]
+    }
+  }
+}

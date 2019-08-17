@@ -1,0 +1,91 @@
+{
+  "$id": "https://github.com/cefn/lowban/schema/db.schema.js",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "definitions": {
+    "categoryTagIdPattern": {
+      "type": "string",
+      "pattern": "^[a-zA-Z\\d\\s:\\u00C0-\\u00FF].*$"
+    },
+    "priorityTagIdPattern": {
+      "type": "string",
+      "pattern": "^!.*$"
+    },
+    "contextTagIdPattern": {
+      "type": "string",
+      "pattern": "^@.*$"
+    },
+    "statusTagIdPattern": {
+      "type": "string",
+      "pattern": "^#.*$"
+    }
+  },
+  "properties": {
+    "task": {
+      "type": "array",
+      "items": {
+        "$ref": "./task.schema.json#/definitions/task"
+      }
+    },
+    "category": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          { "$ref": "./tag.schema.json#/definitions/tag" },
+          {
+            "properties": {
+              "id": {
+                "$ref": "#/definitions/categoryTagIdPattern"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "priority": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          { "$ref": "./tag.schema.json#/definitions/tag" },
+          {
+            "properties": {
+              "id": {
+                "$ref": "#/definitions/priorityTagIdPattern"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "context": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          { "$ref": "./tag.schema.json#/definitions/tag" },
+          {
+            "properties": {
+              "id": {
+                "$ref": "#/definitions/contextTagIdPattern"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "status": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          { "$ref": "./tag.schema.json#/definitions/tag" },
+          {
+            "properties": {
+              "id": {
+                "$ref": "#/definitions/statusTagIdPattern"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
