@@ -49,8 +49,12 @@ test("iterateAllTagIds includes ids from declared tags and transient tags", () =
       {
         id: "0",
         title: "Name",
-        tags:
-          "transientWhat, !transientWhether, @transientWhere, #transientWhich"
+        tagIds: [
+          "transientWhat",
+          "!transientWhether",
+          "@transientWhere",
+          "#transientWhich"
+        ]
       }
     ],
     category: [{ id: "what", title: "Some Category" }],
@@ -75,8 +79,8 @@ test("iterateAllTagIds includes ids from declared tags and transient tags", () =
 
 test("iterateAllTagIds() reports each tag only once", () => {
   const tagStore = mockTagStore({
-    task: [{ id: "0", tags: "this, that" }],
-    category: [{ id: "this" }, { id: "that" }]
+    task: [{ id: "0", tagIds: ["this", "that"] }, { id: "1", tagIds: "this" }],
+    category: [{ id: "that" }]
   })
   const tagIds = [...tagStore.iterateAllTagIds()]
   expect(tagIds).toContain("this")
@@ -90,7 +94,7 @@ test("iterateAllTags includes tags from declared tags and transient tags", () =>
       {
         id: "0",
         title: "Name",
-        tags: "transientTag"
+        tagIds: ["transientTag"]
       }
     ],
     category: [{ id: "what", title: "Some Category" }],
@@ -118,7 +122,7 @@ test("iterateTaskTags retrieve a task's declared tags, constructs transient tags
         id: "0",
         title: "Feed the Cat",
         content: "Leftover chicken in fridge",
-        tags: "!critical, @home, cat, freshmeat"
+        tagIds: ["!critical", "@home", "cat", "freshmeat"]
       }
     ],
     category: [
@@ -138,5 +142,3 @@ test("iterateTaskTags retrieve a task's declared tags, constructs transient tags
   ])
   expect(actualSet).toEqual(expectedSet)
 })
-
-test("createTagMap populates a map by ", () => {})

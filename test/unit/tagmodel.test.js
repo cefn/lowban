@@ -27,11 +27,12 @@ test("getTagType() falls back to default 'category' tag type", () => {
 })
 
 test("getTaskTagIds() splits tags property of task object", () => {
+  const tagIds = ["!urgent", "@home", "#done", "housework"]
   const task = {
-    tags: "!urgent,@home, #done ,housework"
+    tagIds
   }
   const result = getTaskTagIds(task)
-  expect([...result]).toEqual(["!urgent", "@home", "#done", "housework"])
+  expect([...result]).toEqual(tagIds)
 })
 
 test("getTaskTagIds() handles missing tags property", () => {

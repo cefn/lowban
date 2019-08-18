@@ -34,7 +34,7 @@ async function getGraphQlResponse(schema, request, swallowErrors = false) {
 
 test("Schema can list both referenced and declared tags ", async () => {
   const schema = createSchemaFromTree({
-    task: [{ id: "0", tags: "@home,#done" }],
+    task: [{ id: "0", tagIds: ["@home", "#done"] }],
     tags: [{ id: "@home", title: "Can be done in the house" }]
   })
   const request = `{ tag { id } }`
