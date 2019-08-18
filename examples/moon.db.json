@@ -4,19 +4,20 @@
       "id": "0",
       "label": "Fuel Rocket",
       "text": "The rocket consists of three stages—the S-IC first stage, S-II second stage and the S-IVB third stage—and the instrument unit. All three stages use liquid oxygen (LOX) as the oxidizer. The first stage uses RP-1 for fuel, while the second and third stages use liquid hydrogen (LH2)",
-      "tags": "@earth, !mustdo"
+      "tagIds": ["@earth", "!mustdo"]
     },
     {
       "id": "1",
       "label": "Landing Quote",
       "text": "Say something witty when you are on the moon",
-      "tags": "@moon, !wishlist, fun"
+      "tagIds": ["@moon", "wishlist", "fun"]
     }
   ],
   "category": [{ "id": "fun" }],
   "priority": [{ "id": "!mustdo" }, { "id": "!wishlist" }],
   "context": [
     { "id": "@earth" },
+    { "id": "@rocket" },
     { "id": "@orbit" },
     { "id": "@lander" },
     { "id": "@moon" }

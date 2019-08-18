@@ -7,8 +7,11 @@
         { "$ref": "shared.schema.json#/definitions/item" },
         {
           "properties": {
-            "tags": {
-              "type": "string"
+            "tagIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
         }
