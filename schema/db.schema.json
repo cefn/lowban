@@ -6,7 +6,7 @@
     "task": {
       "type": "array",
       "items": {
-        "$ref": "./task.schema.json#/definitions/task"
+        "$ref": "./task.schema.json"
       }
     },
     "category": {

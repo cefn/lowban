@@ -1,9 +1,5 @@
 {
   "$id": "https://github.com/cefn/lowban/tree/v0.2.0/schema/task.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "tag": {
-      "allOf": [{ "$ref": "shared.schema.json#/definitions/item" }]
-    }
-  }
+  "allOf": [{ "$ref": "item.schema.json" }, { "required": ["id"] }]
 }
