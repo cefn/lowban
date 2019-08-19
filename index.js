@@ -7,6 +7,8 @@ const { schemaFactory } = require("./lib/taggraphql")
 
 const next = require("next")
 
+const editableSchema = require("./lib/middleware/editableSchema")
+
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== "production"
 const app = next({ dev })
@@ -25,6 +27,8 @@ app.prepare().then(() => {
       graphiql: true
     })
   )
+
+  server.get("/schema/:typeName", editableSchema)
 
   server.get("*", (req, res) => {
     return handle(req, res)
