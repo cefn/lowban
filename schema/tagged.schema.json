@@ -1,0 +1,26 @@
+{
+  "$id": "https://github.com/cefn/lowban/tree/v0.2.0/schema/db.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "tagIdsList": {
+      "properties": {
+        "tagIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "$comment": "List-based storage-friendly format"
+        }
+      }
+    },
+    "tagIdsString": {
+      "properties": {
+        "tagIds": {
+          "type": "string",
+          "pattern": "^(([^\\s,]+)( [^\\s,]+)*)?$",
+          "$comment": "Space-separated editor-friendly format"
+        }
+      }
+    }
+  }
+}
