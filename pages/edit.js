@@ -20,6 +20,7 @@ function Edit(props) {
   return (
     <Form
       schema={props.schema}
+      uiSchema={props.uiSchema}
       onChange={log("changed")}
       onSubmit={log("submitted")}
       onError={log("errors")}
@@ -29,7 +30,21 @@ function Edit(props) {
 
 Edit.getInitialProps = async function() {
   const schema = await fetchSchema("task")
-  return { schema }
+  let uiSchema = {
+    note: {
+      "ui:widget": "textarea"
+    }
+  }
+  const order = schema["$order"]
+  if (Array.isArray(order)) {
+    Object.assign(uiSchema, {
+      "ui:order": order
+    })
+  }
+  return {
+    schema,
+    uiSchema
+  }
 }
 
 export default Edit
