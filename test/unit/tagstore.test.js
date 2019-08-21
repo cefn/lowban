@@ -1,18 +1,21 @@
 const _ = require("lodash")
-const { createMemoryDb } = require("./harness/lowdb")
+const { dbInMemory } = require("../../lib/lowstore")
 const {
   iterateStoredTypes,
   iterateTraversableTypes
 } = require("../../lib/tagmodel")
-const { defaultTreeFactory, TagStore } = require("../../lib/tagstore")
+const { createDefaultTree, TagStore } = require("../../lib/tagstore")
 
 function mockTagStore(tree) {
-  const db = createMemoryDb(tree).defaultsDeep(defaultTreeFactory())
+  if (!tree) {
+    tree = createDefaultTree()
+  }
+  const db = dbInMemory(tree)
   return new TagStore(db)
 }
 
 test("Default data conforms to db structure", () => {
-  const defaultTree = defaultTreeFactory()
+  const defaultTree = createDefaultTree()
   const typeNames = [...iterateStoredTypes()]
   for (const [typeName, typeCollection] of Object.entries(defaultTree)) {
     typeNames.includes(typeName)
