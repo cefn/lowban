@@ -1,40 +1,80 @@
+const { readFileSync, unlinkSync } = require("fs")
 const Memory = require("lowdb/adapters/Memory")
-const {
-  createFileDb,
-  deleteFileDb,
-  parseFileDb,
-  createMemoryDb
-} = require("./harness/lowdb")
-const { loadDb, LowStore } = require("../../lib/lowstore")
+const { dbFromPath, dbInMemory, LowStore } = require("../../lib/lowstore")
 
-function mockLowStore(tree) {
-  const db = createMemoryDb(tree)
+const defaultDbPath = "/tmp/db.json"
+
+function createTestDb(tree, testDbPath = defaultDbPath) {
+  return dbFromPath(testDbPath, tree)
+}
+
+function createTestLowStore(tree, testDbPath = defaultDbPath) {
+  const db = createTestDb(tree, testDbPath)
   return new LowStore(db)
 }
 
-test("Lodash transformation chain followed by write is reflected in db file", () => {
-  const db = createFileDb({ fieldName: "fieldValue" })
-  db.set("fieldName", "otherValue").write()
-  expect(parseFileDb()).toEqual({ fieldName: "otherValue" })
-  deleteFileDb()
+function createMockLowStore(tree) {
+  const db = dbInMemory(tree)
+  return new LowStore(db)
+}
+
+/** Remove db JSON file from disk */
+function deleteTestDb(testDbPath = defaultDbPath) {
+  unlinkSync(testDbPath)
+}
+
+/** Parse the JSON file direct from disk without lowstore */
+function parseTestDb(testDbPath = defaultDbPath) {
+  return JSON.parse(readFileSync(testDbPath, "utf-8"))
+}
+
+test("Lowdb operations followed by write are reflected in db file", () => {
+  try {
+    const db = createTestDb({ fieldName: "fieldValue" })
+    db.set("fieldName", "otherValue").write()
+    const actual = parseTestDb()
+    const expected = { fieldName: "otherValue" }
+    expect(actual).toEqual(expected)
+  } finally {
+    deleteTestDb()
+  }
+})
+
+test("LowStore changes to a table are reflected in db file", () => {
+  try {
+    const store = createTestLowStore({
+      exampleType: [{ exampleField: "initialValue" }]
+    })
+    store.changeTable("exampleType", table => {
+      return table.updateWhere(
+        { exampleField: "initialValue" },
+        { exampleField: "finalValue" }
+      )
+    })
+    expect(parseTestDb()).toEqual({
+      exampleType: [{ exampleField: "finalValue" }]
+    })
+  } finally {
+    deleteTestDb()
+  }
 })
 
 test("iterateByType lists entities of a type", () => {
-  const store = mockLowStore({
+  const store = createMockLowStore({
     song: [
       { id: "0", title: "Baby Shark" },
       { id: "1", title: "Raining Tacos" }
     ]
   })
-  const songs = store.iterateByType("song")
-  expect([...songs]).toEqual([
+  const songList = [...store.iterateByType("song")]
+  expect(songList).toEqual([
     { id: "0", title: "Baby Shark" },
     { id: "1", title: "Raining Tacos" }
   ])
 })
 
 test("iterateByType throws where top level collections are not arrays", () => {
-  const lowStore = mockLowStore({
+  const lowStore = createMockLowStore({
     item: { mockedId: { title: "My ancestor should be an array not a map" } }
   })
   expect(() => {
@@ -43,7 +83,7 @@ test("iterateByType throws where top level collections are not arrays", () => {
 })
 
 test("entityResolverFactory creates GraphQL resolver listing entities for a type", () => {
-  const store = mockLowStore({
+  const store = createMockLowStore({
     song: [
       { id: "0", title: "Baby Shark" },
       { id: "1", title: "Raining Tacos" }
@@ -59,7 +99,7 @@ test("entityResolverFactory creates GraphQL resolver listing entities for a type
 })
 
 test("getById can retrieve a single typed entity", () => {
-  const store = mockLowStore({
+  const store = createMockLowStore({
     song: [
       { id: "0", title: "Baby Shark" },
       { id: "1", title: "Raining Tacos" }
