@@ -5,13 +5,11 @@ Will probably use...
 - webpack for client-side javascript transpiling and bundling
   - webpack dev server potentially for testing standalone React components?
 - react-engine for server-side templating
-  - potential for client-side mounting of server-side rendered templates
+  - potential for client-side mounting of server-side rendered templates using https://www.npmjs.com/package/memory-fs
 
 ## Development targets
 
-1. Create route listing data from database in server-side-rendered template
-2. Create route loading react-jsonschema-form client-side editor allowing editing and saving of new entries
-3.
-4. Establish webpack bundling workflow to generate client-side scripts with hot-module-replacement support
-5. Incorporate React in server-side rendering (by using react-engine or extending EJS macros)
-6.
+1. Create mutation and prove saving of data to lowdb
+2. Consider how to template around React components - Next.js, Platelet, EJS, react-engine, something else.
+3. If not Next.js Establish webpack bundling workflow to generate client-side scripts with hot-module-replacement support
+4. Add a Markdown-highlighting editor panel for 'note' field, e.g. based on HighlightJS (simpler) or PrismJS (e.g. CodeFlask)
