@@ -1,18 +1,17 @@
 "use strict"
-const { createMemoryDb } = require("./harness/lowdb")
 const { getLocalResponse } = require("../../lib/util/graphql")
-const { TagStore, defaultTreeFactory } = require("../../lib/tagstore")
+const { dbInMemory } = require("../../lib/lowstore")
+const { createDefaultTree, TagStore } = require("../../lib/tagstore")
 const { schemaFactory } = require("../../lib/taggraphql")
 
-function mockTagStore(mockTree) {
-  const dbTree = {}
-  Object.assign(dbTree, defaultTreeFactory()) //initialise default tree
-  Object.assign(dbTree, mockTree) //overwrite with mock values
-  return new TagStore(createMemoryDb(dbTree))
+function createMockTagStore(mockTree) {
+  const db = dbInMemory(createDefaultTree()) //initialise db
+  db.defaultsDeep(mockTree).write() //overwrite values for test
+  return new TagStore(db)
 }
 
 function createSchemaFromTree(tree) {
-  return schemaFactory(mockTagStore(tree))
+  return schemaFactory(createMockTagStore(tree))
 }
 
 test("Schema can list both referenced and declared tags ", async () => {
