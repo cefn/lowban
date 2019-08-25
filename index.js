@@ -1,7 +1,7 @@
 const express = require("express")
 const expressGraphql = require("express-graphql")
 
-const { loadDb } = require("./lib/lowstore")
+const { dbFromPath } = require("./lib/lowstore")
 const { TagStore } = require("./lib/tagstore")
 const { schemaFactory } = require("./lib/taggraphql")
 
@@ -17,7 +17,7 @@ const handle = app.getRequestHandler()
 app.prepare().then(() => {
   const server = express()
 
-  const db = loadDb("db.json")
+  const db = dbFromPath("db.json")
   const store = new TagStore(db)
   const schema = schemaFactory(store)
   server.use(
