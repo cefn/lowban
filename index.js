@@ -1,41 +1,9 @@
-const express = require("express")
-const expressGraphql = require("express-graphql")
+import "bootstrap"
+import "bootstrap/dist/css/bootstrap.min.css"
 
-const { dbFromPath } = require("./lib/lowstore")
-const { TagStore } = require("./lib/tagstore")
-const { schemaFactory } = require("./lib/taggraphql")
+import React from "react"
+import ReactDom from "react-dom"
+import Dash from "components/Dash"
 
-const next = require("next")
-
-const editableSchema = require("./lib/middleware/editableSchema")
-
-const port = parseInt(process.env.PORT, 10) || 3000
-const dev = process.env.NODE_ENV !== "production"
-const app = next({ dev })
-const handle = app.getRequestHandler()
-
-app.prepare().then(() => {
-  const server = express()
-
-  const db = dbFromPath("db.json")
-  const store = new TagStore(db)
-  const schema = schemaFactory(store)
-  server.use(
-    "/graphql",
-    expressGraphql({
-      schema,
-      graphiql: true
-    })
-  )
-
-  server.get("/schema/:typeName", editableSchema)
-
-  server.get("*", (req, res) => {
-    return handle(req, res)
-  })
-
-  server.listen(port, err => {
-    if (err) throw err
-    console.log(`> Ready on http://localhost:${port}`)
-  })
-})
+alert("Hi")
+ReactDom.render(<Dash />, document.getElementById("app"))
