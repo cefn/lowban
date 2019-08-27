@@ -4,10 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
-    "graphql": "nodemon index.js",
-    "build": "next build",
-    "start": "next start",
+    "start": "webpack && babel-node server.js",
     "test": "jest --collect-coverage"
   },
   "author": "Cefn Hoile",
@@ -20,9 +17,12 @@
   },
   "dependencies": {
     "auto-bind": "^2.1.0",
+    "bootstrap": "^4.3.1",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
     "express-graphql": "^0.8.0",
+    "express-promise-router": "^3.0.3",
     "graphql": "^14.4.1",
     "graphql-tools": "^4.0.5",
     "isomorphic-unfetch": "^3.0.0",
@@ -32,20 +32,34 @@
     "lodash": "^4.17.15",
     "lodash-id": "^0.14.0",
     "lowdb": "^1.0.0",
-    "next": "^9.0.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-jsonschema-form": "^1.7.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/runtime": "^7.5.5",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
     "cross-env": "^5.2.0",
-    "eslint": "^6.0.1",
+    "css-loader": "^3.2.0",
+    "eslint": "^6.2.2",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^24.8.0",
-    "nodemon": "^1.19.1"
+    "jquery": "^3.4.1",
+    "nodemon": "^1.19.1",
+    "popper.js": "^1.15.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
   }
 }
