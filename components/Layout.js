@@ -1,0 +1,1 @@
+/** This should be used to define index.html as a component which can be serialised to string */
