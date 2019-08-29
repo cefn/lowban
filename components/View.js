@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import Form from "react-jsonschema-form"
 const fetch = require("isomorphic-unfetch")
 const { host } = require("../defaults")
@@ -82,6 +83,11 @@ class View extends React.Component {
     }
 
   }
+}
+
+View.propTypes = {
+  type: PropTypes.string.isRequired,
+  id: PropTypes.string
 }
 
 export default View

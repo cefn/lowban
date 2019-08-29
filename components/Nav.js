@@ -1,3 +1,5 @@
 const React = require("react")
-const Nav = () => <div>Nav</div>
-export default Nav
+
+export default function Nav() {
+  return <div>Nav</div>
+}

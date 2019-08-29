@@ -2,15 +2,19 @@ import React from "react"
 import Nav from "./Nav"
 import View from "./View"
 import List from "./List"
+import FrameSet from "./FrameSet"
+import Frame from "./Frame"
 
-class Dash extends React.Component {
-  render() {
-    return <React.Fragment>
+export default function Dash() {
+  return <React.Fragment>
+    <FrameSet>
       <Nav />
-      <View />
-      <List />
-    </React.Fragment>
-  }
+      <Frame path="/view/:type/:id">
+        <View />
+      </Frame>
+      <Frame path="/list/:type">
+        <List />
+      </Frame>
+    </FrameSet>
+  </React.Fragment>
 }
-
-export default Dash

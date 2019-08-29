@@ -1,11 +1,12 @@
 import React from "react"
+import PropTypes from "prop-types"
 import { getRemoteResponse } from "../lib/util/graphql"
 
 class List extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      type: "task",
+      type: props.type || "task",
       items: []
     }
   }
@@ -25,6 +26,10 @@ class List extends React.Component {
       ))}
     </ul>
   }
+}
+
+List.propTypes = {
+  type: PropTypes.string
 }
 
 export default List
