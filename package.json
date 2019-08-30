@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack && babel-node --source-maps server.js",
+    "start": "babel-watch --exclude db.json server.js",
+    "build": "webpack",
+    "watch": "webpack --watch",
     "test": "jest --collect-coverage"
   },
   "author": "Cefn Hoile",
   "license": "GPL",
   "nodemonConfig": {
     "ignore": [
+      "db.json",
       "test/*"
     ],
     "delay": "2500"
@@ -46,6 +49,7 @@
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
+    "babel-watch": "^7.0.0",
     "cross-env": "^5.2.0",
     "css-loader": "^3.2.0",
     "eslint": "^6.2.2",
