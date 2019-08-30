@@ -1,3 +1,4 @@
+const path = require("path")
 const express = require("express")
 const expressPromiseRouter = require("express-promise-router")
 const expressGraphql = require("express-graphql")
@@ -11,7 +12,7 @@ const port = parseInt(process.env.PORT, 10) || 3000
 const server = express()
 const router = expressPromiseRouter()
 
-const db = dbFromPath("db.json")
+const db = dbFromPath(path.join(__dirname, "db.json"))
 const store = new TagStore(db)
 const schema = schemaFactory(store)
 const graphqlEndpoint = expressGraphql({
