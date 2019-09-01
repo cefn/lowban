@@ -1,15 +1,33 @@
-Will probably use...
-
-- react-jsonschema-form for Forms-based editing https://github.com/mozilla-services/react-jsonschema-form
-  - minimal-react for creating basic skeleton (doesn't import react-scripts or introduce npm checks like create-react-app does)
-- webpack for client-side javascript transpiling and bundling
-  - webpack dev server potentially for testing standalone React components?
-- react-engine for server-side templating
-  - potential for client-side mounting of server-side rendered templates using https://www.npmjs.com/package/memory-fs
-
 ## Development targets
 
-1. Create mutation and prove saving of data to lowdb
-2. Consider how to template around React components - Next.js, Platelet, EJS, react-engine, something else.
-3. If not Next.js Establish webpack bundling workflow to generate client-side scripts with hot-module-replacement support
-4. Add a Markdown-highlighting editor panel for 'note' field, e.g. based on HighlightJS (simpler) or PrismJS (e.g. CodeFlask)
+Create a bootstrap-based layout for the components. Strategy for panes and their navigation behaviours:
+
+* Nav
+    - New button
+* Context based routing logic
+    - Path filter
+        - updates context path below only if path matches
+        - 
+* Edit pane showing either Task or Tag
+    - task menu 
+        - next control - pulls task from position after this in next list
+        - done control - adds #done, then pulls task from same position in next list (since the old one will be gone)
+    - autocomplete for tagIds field
+* 'Tag' pane
+    - narrow, central view lists tags below and controls Task list pane to right 
+    - search box for filtering, with autocomplete
+    - Tabbed tags (All, Categories, Contexts, Priorities hoisted (in priority order), Statuses
+    - Colors for status types?
+* Task list pane
+    - further filter on label and note content (with regexp)
+    - tabbed (next task) (filtered tasks)
+    - detail levels? e.g. label only, label+note, label+note+tags
+
+Keyboard shortcuts:
+    * Navigation between panes in edit (e.g. SHIFT+ALT+L label, SHIFT+ALT+N notes, SHIFT+ALT+T tags)
+
+
+
+
+1. Add a Markdown-highlighting editor panel for 'note' field, e.g. based on HighlightJS (simpler) or PrismJS (e.g. CodeFlask)
+
