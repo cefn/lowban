@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import { Link } from "react-router-dom"
 import { getRemoteResponse } from "../lib/util/graphql"
 
 class List extends React.Component {
@@ -12,8 +13,7 @@ class List extends React.Component {
   }
   async componentDidMount() {
     const response = await getRemoteResponse(
-      "http://localhost:3000/graphql",
-      "{ taskList { label } }"
+      "{ taskList { label id } }"
     )
     this.setState(_state => this.state.items = response.data.taskList)
   }
@@ -21,7 +21,7 @@ class List extends React.Component {
     return <ul>
       {this.state.items.map((item, key) => (
         <li key={key}>
-          {item.label}
+          <Link to={`/edit/task/${item.id}`}>{item.label}</Link>
         </li>
       ))}
     </ul>
