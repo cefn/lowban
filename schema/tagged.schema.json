@@ -9,7 +9,7 @@
           "items": {
             "type": "string"
           },
-          "$comment": "List-based storage-friendly format"
+          "description": "Tag strings in an array"
         }
       }
     },
@@ -18,7 +18,7 @@
         "tagIds": {
           "type": "string",
           "pattern": "^(([^\\s,]+)( [^\\s,]+)*)?$",
-          "$comment": "Space-separated editor-friendly format"
+          "description": "Tags separated by space"
         }
       }
     }
