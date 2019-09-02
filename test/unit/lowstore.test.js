@@ -82,22 +82,6 @@ test("iterateByType throws where top level collections are not arrays", () => {
   }).toThrow()
 })
 
-test("entityResolverFactory creates GraphQL resolver listing entities for a type", () => {
-  const store = createMockLowStore({
-    song: [
-      { id: "0", title: "Baby Shark" },
-      { id: "1", title: "Raining Tacos" }
-    ]
-  })
-  const resolver = store.entityResolverFactory("song")
-  const { parent, args, context, info } = {} //all deliberately undefined
-  const songs = resolver(parent, args, context, info)
-  expect([...songs]).toEqual([
-    { id: "0", title: "Baby Shark" },
-    { id: "1", title: "Raining Tacos" }
-  ])
-})
-
 test("getById can retrieve a single typed entity", () => {
   const store = createMockLowStore({
     song: [
