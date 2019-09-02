@@ -17,7 +17,7 @@
       "properties": {
         "tagIds": {
           "type": "string",
-          "pattern": "^(([^\\s,]+)( [^\\s,]+)*)?$",
+          "pattern": "^\\s*(([^\\s,]+)(\\s*[^\\s,]+)*)?\\s?$",
           "description": "Tags separated by space"
         }
       }
