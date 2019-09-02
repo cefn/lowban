@@ -5,6 +5,8 @@ import Edit from "./Edit"
 import FrameSet from "./FrameSet"
 import Frame from "./Frame"
 import ItemList from "./ItemList"
+import FilteredTaskList from "./FilteredTaskList"
+import FilteredTagList from "./FilteredTagList"
 
 export default function Dash() {
 
@@ -23,14 +25,20 @@ export default function Dash() {
             </Frame>
           </Col>
           <Col>
+            <FilteredTaskList />
+          </Col>
+          <Col>
+            <FilteredTagList />
+          </Col>
+          {/**
+          <Col>
             <ItemList type="task" />
           </Col>
           <Col>
             <ItemList type="tag" />
-            {/**
             <TagList />
-             */}
           </Col>
+             */}
         </Row>
       </Container>
     </FrameSet>

@@ -74,7 +74,7 @@ class Edit extends React.Component {
       formData = editableData(this.state.dbData)
     }
     return <Form
-      liveValidate={true}
+      liveValidate={false}
       schema={this.state.schema}
       uiSchema={this.state.uiSchema}
       formData={formData}
