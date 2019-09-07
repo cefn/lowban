@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Form } from "react-bootstrap"
-import { Link } from "react-router-dom"
 import { getRemoteResponse } from "../lib/util/graphql"
+import { ValueSetter } from "./valueContext"
 
 function FilteredTaskList(props) {
   const [filterString, setFilterString] = useState("")
@@ -42,7 +42,7 @@ function FilteredTaskList(props) {
     </Form>
     <ul className="list-group">
       {itemList.map((item, key) => <li key={key} className="list-group-item">
-        <Link to={`/edit/task/${item.id}`}>{item.label ? item.label : item.id}</Link>
+        <ValueSetter value={item.id} name="taskId">{item.label ? item.label : item.id}</ValueSetter>
       </li>)}
     </ul>
 
