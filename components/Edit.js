@@ -1,9 +1,9 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import Form from "react-jsonschema-form"
 import fetch from "isomorphic-unfetch"
 import { host } from "../defaults"
-import { initialCapital } from "../lib/taggraphql"
+import { initialCapital } from "../lib/util/javascript"
 import { editableData, storableData } from "../lib/util/form"
 
 async function fetchGraphqlResponse(request) {
@@ -21,7 +21,7 @@ async function fetchGraphqlResponse(request) {
 
 //TODO figure out how to couple json-schema definitions of a type's fields (for form creation) 
 //and the graphql definitions of a type's fields (for data retrieval to populate form)
-async function fetchData(typeName, id) {
+async function fetchDbData(typeName, id) {
   const query = `{
     ${typeName}(id:"${id}"){
       id
@@ -46,93 +46,105 @@ async function fetchSchema(typeName) {
   return res.json()
 }
 
-class Edit extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-    this.state.uiSchema = {
-      note: {
-        "ui:widget": "textarea",
-        "ui:options": {
-          rows: 8
+async function saveUnsavedData(typeName, unsavedData) {
+  let variables = {
+    submitted: storableData(unsavedData)
+  }
+  let queryResolverName = `${typeName}Save`
+  let queryInputSpec = `${initialCapital(typeName)}Input!`
+  let query = `mutation ($submitted:${queryInputSpec}){
+    ${queryResolverName}(input:$submitted){ id }
+  }`
+  let response = await fetchGraphqlResponse({
+    query, variables
+  })
+  let resolved = response.data[queryResolverName]
+  return resolved.id
+}
+
+
+function Edit(props) {
+  const [formData, setFormData] = useState(null)
+  const [schema, setSchema] = useState(null)
+  const [uiSchema, setUiSchema] = useState({
+    note: {
+      "ui:widget": "textarea",
+      "ui:options": {
+        rows: 8
+      }
+    },
+    id: {
+      "ui:widget": "hidden",
+    }
+  })
+
+  // handle type schema and matching field-ordering config
+  if (schema) {
+    if (uiSchema["ui:order"] !== schema.order) {
+      setUiSchema({ ...{ "ui:order": schema.order }, uiSchema })
+    }
+  }
+
+  const refreshSchema = async () => {
+    setSchema(await fetchSchema(props.typeName))
+  }
+
+  const refreshData = async () => {
+    if (formData) { //save any preceding data
+      save()
+    }
+    if (props.typeName && props.id) {
+      const dbData = await fetchDbData(props.typeName, props.id)
+      setFormData(editableData(dbData))
+    }
+    else {
+      setFormData(null)
+    }
+  }
+
+  const save = async (isMounted = true) => {
+    if (formData) {
+      const id = await saveUnsavedData(props.typeName, formData)
+      if (isMounted) { //ensure local copies of data have correct record id 
+        if (formData && formData.id !== id) {
+          setFormData({ ...formData, id })
         }
-      },
-      id: {
-        "ui:widget": "hidden",
       }
     }
   }
-  async componentDidMount() {
-    return await this.loadFormData()
-  }
-  render() {
-    if (!this.state.schema) {
-      return <p>Loading</p>
-    }
-    let formData
-    if (this.state.dbData) {
-      formData = editableData(this.state.dbData)
-    }
-    return <Form
-      liveValidate={false}
-      schema={this.state.schema}
-      uiSchema={this.state.uiSchema}
-      formData={formData}
-      onSubmit={({ formData }, _e) => this.storeFormData(formData)}
-      onError={console.log}
-    />
-  }
-  async loadFormData() {
-    const schemaPromise = fetchSchema(this.props.type)
-    const dbDataPromise = this.props.id ? fetchData(this.props.type, this.props.id) : Promise.resolve()
-    const [schema, dbData] = await Promise.all([schemaPromise, dbDataPromise])
 
-    //create a map of new values for setState
-    const mergeState = {}
 
-    // handle type schema and matching field-ordering config
-    mergeState.schema = schema
-    const order = schema["$order"]
-    if (Array.isArray(order)) { //override current order
-      mergeState.uiSchema = Object.assign({ "ui:order": order }, this.state.uiSchema)
-    }
 
-    //handle item data
-    if (dbData) {
-      mergeState.dbData = dbData
-    }
+  useEffect(() => {
+    refreshSchema()
+  }, [props.typeName])
 
-    this.setState((state) => Object.assign(state, mergeState))
+
+  useEffect(() => {
+    refreshData()
+  }, [props.typeName, props.id])
+
+  const handleChange = async ({ formData }, _e) => {
+    setFormData(formData)
   }
-  async storeFormData(formData) {
-    let dbData = storableData(formData)
-    let variables = {
-      submitted: dbData
-    }
-    let typeName = "task" //TODO remove this hard-coding
-    let queryResolverName = `${typeName}Save`
-    let queryInputSpec = `${initialCapital(typeName)}Input!`
-    let query = `mutation ($submitted:${queryInputSpec}){
-      ${queryResolverName}(input:$submitted){ id }
-    }`
-    let response = await fetchGraphqlResponse({
-      query, variables
-    })
-    let resolved = response.data[queryResolverName]
-    //merge resulting id back into data
-    let id = resolved.id
-    if (dbData.id !== id) {
-      this.setState((_prevState, _props) => { //merge id into data
-        return ({
-          dbData: Object.assign(dbData, { id })
-        })
-      })
-    }
+
+  if (!schema) {
+    return <p>Loading</p>
   }
+  return <Form
+    liveValidate={false}
+    schema={schema}
+    uiSchema={uiSchema}
+    formData={formData}
+    onChange={handleChange}
+    onSubmit={save}
+    onError={console.log}
+  />
+
 }
 
 Edit.propTypes = {
-  type: PropTypes.string.isRequired,
+  typeName: PropTypes.string.isRequired,
   id: PropTypes.string
 }
 
