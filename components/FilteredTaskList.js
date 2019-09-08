@@ -33,10 +33,10 @@ function FilteredTaskList(props) {
   return <React.Fragment>
     <Form>
       <Form.Group controlId="filterStringId">
-        <Form.Label>Search Tasks</Form.Label>
-        <Form.Control placeholder="Type Filter String" onChange={handleFieldChange} />
+        <Form.Label>Tasks</Form.Label>
+        <Form.Control placeholder="Filter" onChange={handleFieldChange} />
         <Form.Text className="text-muted">
-          space-separated matchers
+          space-separated
         </Form.Text>
       </Form.Group>
     </Form>
