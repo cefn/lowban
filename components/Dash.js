@@ -1,46 +1,43 @@
-import React from "react"
-import { Container, Row, Col } from "react-bootstrap"
+import React, {
+  useState
+} from "react"
+import {
+  Container,
+  Row,
+  Col
+} from "react-bootstrap"
 import Menu from "./Menu"
 import Edit from "./Edit"
-import FrameSet from "./FrameSet"
-import Frame from "./Frame"
-import ItemList from "./ItemList"
 import FilteredTaskList from "./FilteredTaskList"
 import FilteredTagList from "./FilteredTagList"
+import { ValueRoot, ValueGetter } from "./valueContext"
 
-export default function Dash() {
+export default function Dash(props) {
 
-  return <React.Fragment>
-    <FrameSet>
-      <Container>
-        <Row>
-          <Col>
-            <Menu />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Frame path="/edit/:type/:id">
-              <Edit type="task" />
-            </Frame>
-          </Col>
-          <Col>
-            <FilteredTaskList />
-          </Col>
-          <Col>
-            <FilteredTagList />
-          </Col>
-          {/**
-          <Col>
-            <ItemList type="task" />
-          </Col>
-          <Col>
-            <ItemList type="tag" />
-            <TagList />
-          </Col>
-             */}
-        </Row>
-      </Container>
-    </FrameSet>
-  </React.Fragment>
+  const [taskId, setTaskId] = useState(props.taskId)
+
+  return <ValueRoot names={["taskId", "tagId", "filterString"]}>
+    <Container>
+      <Row>
+        <Col>
+          <Menu />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <ValueGetter name="taskId">
+            {(taskId) => {
+              return <Edit typeName="task" id={taskId} />
+            }}
+          </ValueGetter>
+        </Col>
+        <Col>
+          <FilteredTaskList />
+        </Col>
+        <Col>
+          <FilteredTagList />
+        </Col>
+      </Row>
+    </Container>
+  </ValueRoot>
 }

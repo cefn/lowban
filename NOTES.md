@@ -1,5 +1,11 @@
 ## Development targets
 
+### Milestones
+
+* Priority list orders by priority
+* Due list orders by due
+* Next list orders by both priority and due
+
 Create a bootstrap-based layout for the components. Strategy for panes and their navigation behaviours:
 
 * Nav
