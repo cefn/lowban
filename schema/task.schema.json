@@ -5,11 +5,14 @@
     "label",
     "tagIds",
     "note",
-    "id"
+    "id",
   ],
   "allOf": [
     {
       "$ref": "item.schema.json"
+    },
+    {
+      "$ref": "actioned.schema.json"
     },
     {
       "$ref": "tagged.schema.json#/definitions/tagIdsList"
