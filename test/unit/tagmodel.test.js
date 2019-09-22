@@ -6,6 +6,7 @@ const {
   tagPattern,
   singleTagPattern,
   multipleTagPattern,
+  iterateStringTagIds,
   tagTypeByPrefix,
   tagTypes,
   getTagType,
@@ -64,6 +65,17 @@ test("multipleTagPattern matches all styles of tag", () => {
     "!urgent", "@'context phrase'", "#\"status phrase\"", "~schedule", "category"
   ])
 })
+
+test("iterateStringTagIds() can extract ids from space-separated string", () => {
+  const stringTagIds = "mail @home !urgent ~'every thursday' |'next month' ok"
+  expect([...iterateStringTagIds(stringTagIds)]).toEqual(["mail", "@home", "!urgent", "~'every thursday'", "|'next month'", "ok"])
+})
+
+test("iterateStringTagIds() behaves well with no matches", () => {
+  const stringTagIds = ""
+  expect([...iterateStringTagIds(stringTagIds)]).toEqual([])
+})
+
 
 test("getTagType() can identify all tag types", () => {
   for (const [tagPrefix, tagType] of Object.entries(tagTypeByPrefix)) {
@@ -230,7 +242,7 @@ test("isTaskActionable() returns false for task whose actionable time has not ye
   expect(isTaskActionable(task)).toBe(false)
 })
 
-test("isTaskActionable() returns true for task after its actionable time", () => {
+test("isTaskActionable() returns true for task after snooze has expired", () => {
   const now = getNow()
   const task = { action: [{ type: "snooze", until: now - oneDayInMs }] }
   expect(isTaskActionable(task)).toBe(true)
