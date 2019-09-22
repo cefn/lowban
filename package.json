@@ -4,10 +4,83 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-watch --exclude db.json server.js",
+    "start": "babel-watch --exclude db.json app.js",
     "build": "webpack",
     "watch": "webpack --watch",
     "test": "jest --collect-coverage"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-transform-runtime",
+        {
+          "regenerator": true
+        }
+      ]
+    ],
+    "sourceType": "unambiguous"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/",
+      "/lib/"
+    ]
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "node": true,
+      "jest": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "globals": {
+      "Atomics": "readonly",
+      "SharedArrayBuffer": "readonly"
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": 2018
+    },
+    "plugins": [
+      "react"
+    ],
+    "rules": {
+      "indent": [
+        "error",
+        2
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "quotes": [
+        "error",
+        "double"
+      ],
+      "semi": [
+        "error",
+        "never"
+      ],
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ]
+    }
   },
   "author": "Cefn Hoile",
   "license": "GPL",
@@ -18,9 +91,11 @@
     "express": "^4.17.1",
     "express-graphql": "^0.8.0",
     "express-promise-router": "^3.0.3",
+    "fix-time": "^2.1.0",
     "graphql": "^14.4.1",
     "graphql-tools": "^4.0.5",
     "isomorphic-unfetch": "^3.0.0",
+    "iter-tools": "^6.2.6",
     "json-schema-merge-allof": "^0.6.0",
     "json-schema-ref-parser": "^7.1.0",
     "json-stable-stringify": "^1.0.1",
@@ -36,10 +111,11 @@
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.5.5",
-    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.6.0",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "@babel/runtime": "^7.5.5",
+    "@babel/runtime": "^7.6.0",
+    "@types/jest": "^24.0.18",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
@@ -49,6 +125,7 @@
     "eslint": "^6.3.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jest": "^22.17.0",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.14.3",
