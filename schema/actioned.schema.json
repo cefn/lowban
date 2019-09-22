@@ -1,0 +1,23 @@
+{
+    "$id": "https://github.com/cefn/lowban/tree/v0.2.0/schema/actioned.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "action": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "$ref": "actions/create.schema.json"
+                    },
+                    {
+                        "$ref": "actions/fulfil.schema.json"
+                    },
+                    {
+                        "$ref": "actions/snooze.schema.json"
+                    },
+                ]
+            }
+        }
+    }
+}

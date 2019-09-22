@@ -1,0 +1,22 @@
+{
+  "$id": "https://github.com/cefn/lowban/tree/v0.2.0/schema/tags/snooze.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "$ref": "../action.schema.json"
+    },
+    {
+      "properties": {
+        "type": {
+          "enum": [
+            "snooze"
+          ]
+        },
+        "until": {
+          "$comment": "Snooze until",
+          "type": "integer"
+        }
+      }
+    }
+  ]
+}
