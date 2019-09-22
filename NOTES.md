@@ -2,9 +2,16 @@
 
 ### Milestones
 
-* Priority list orders by priority
-* Due list orders by due
-* Next list orders by both priority and due
+* Can filter to hide done tasks
+* Populate and Support create actions
+* Next list orders by priority availability and due
+* Filters can remove items from a list
+* Tabbed lists
+- All list (and search view) shows everything
+- Priority list orders by priority
+- Due list orders by due
+
+Normalise tags into single tag schema file like action.schema.json
 
 Create a bootstrap-based layout for the components. Strategy for panes and their navigation behaviours:
 
@@ -33,6 +40,16 @@ Keyboard shortcuts:
     * Navigation between panes in edit (e.g. SHIFT+ALT+L label, SHIFT+ALT+N notes, SHIFT+ALT+T tags)
 
 
+# Notes from Olga
+
+How you might sort tasks
+
+* deadlines first
+* shortness of task
+* most diverse compared to recently completed
+* things that are for others
+* giving tasks an estimated time
+* telling system how much time you have
 
 
 1. Add a Markdown-highlighting editor panel for 'note' field, e.g. based on HighlightJS (simpler) or PrismJS (e.g. CodeFlask)
