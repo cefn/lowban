@@ -6,17 +6,7 @@
         "action": {
             "type": "array",
             "items": {
-                "oneOf": [
-                    {
-                        "$ref": "actions/create.schema.json"
-                    },
-                    {
-                        "$ref": "actions/fulfil.schema.json"
-                    },
-                    {
-                        "$ref": "actions/snooze.schema.json"
-                    },
-                ]
+                "$ref": "action.schema.json"
             }
         }
     }
