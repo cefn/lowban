@@ -1,36 +1,41 @@
-const path = require("path")
 const express = require("express")
 const expressPromiseRouter = require("express-promise-router")
 const expressGraphql = require("express-graphql")
 
-const { dbFromPath } = require("./lib/lowstore")
 const { TagStore } = require("./lib/tagstore")
 const { schemaFactory } = require("./lib/taggraphql")
 
-const port = parseInt(process.env.PORT, 10) || 3000
+function launchServer(db, port = 3000) {
+  //create graphql endpoint
+  const store = new TagStore(db)
+  const schema = schemaFactory(store)
+  const graphqlEndpoint = expressGraphql({
+    schema,
+    graphiql: true
+  })
 
-const server = express()
-const router = expressPromiseRouter()
+  //create schema endpoint
+  const simplifySchema = require("./lib/middleware/simplifySchema")
 
-const db = dbFromPath(path.join(__dirname, "db.json"))
-const store = new TagStore(db)
-const schema = schemaFactory(store)
-const graphqlEndpoint = expressGraphql({
-  schema,
-  graphiql: true
-})
+  const server = express()
+  const router = expressPromiseRouter()
 
-const simplifySchema = require("./lib/middleware/simplifySchema")
+  router.use("/graphql", graphqlEndpoint)
+  router.get("/schema/:typeName", simplifySchema)
 
-router.use("/graphql", graphqlEndpoint)
-router.get("/schema/:typeName", simplifySchema)
+  router.use(express.static("static"))
+  router.use("/", (_req, res, _next) => res.sendFile(__dirname + "/index.html"))
 
+  server.use("/", router)
 
-router.use(express.static("static"))
-router.use("/", (_req, res, _next) => res.sendFile(__dirname + "/index.html"))
+  server.listen(port, err => {
+    if (err) throw err
+    console.log(`> Ready on http://localhost:${port}`)
+  })
 
-server.use("/", router)
-server.listen(port, err => {
-  if (err) throw err
-  console.log(`> Ready on http://localhost:${port}`)
-})
+}
+
+module.exports = {
+  launchServer
+}
+
