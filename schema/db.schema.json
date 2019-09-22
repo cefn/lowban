@@ -32,6 +32,18 @@
       "items": {
         "$ref": "./tags/status.schema.json"
       }
+    },
+    "schedule": {
+      "type": "array",
+      "items": {
+        "$ref": "./tags/schedule.schema.json"
+      }
+    },
+    "deadline": {
+      "type": "array",
+      "items": {
+        "$ref": "./tags/deadline.schema.json"
+      }
     }
   }
 }
