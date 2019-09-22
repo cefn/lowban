@@ -14,8 +14,6 @@ import { ValueRoot, ValueGetter } from "./valueContext"
 
 export default function Dash(props) {
 
-  const [taskId, setTaskId] = useState(props.taskId)
-
   return <ValueRoot names={["taskId", "tagId", "filterString"]}>
     <Container>
       <Row>
