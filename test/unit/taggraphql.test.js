@@ -19,7 +19,7 @@ test("Schema can list both referenced and declared tags ", async () => {
     task: [{ id: "0", tagIds: ["@home", "#done"] }],
     tags: [{ id: "@home", title: "Can be done in the house" }]
   })
-  const request = `{ tagList { id } }`
+  const request = "{ tagList { id } }"
   const response = await getLocalResponse(schema, request)
   const records = response.data.tagList
   const actual = new Set(records)
