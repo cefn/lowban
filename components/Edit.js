@@ -50,7 +50,7 @@ async function saveUnsavedData(typeName, unsavedData) {
   let variables = {
     submitted: storableData(unsavedData)
   }
-  let queryResolverName = `${typeName}Save`
+  let queryResolverName = `${typeName}Merge`
   let queryInputSpec = `${initialCapital(typeName)}Input!`
   let query = `mutation ($submitted:${queryInputSpec}){
     ${queryResolverName}(input:$submitted){ id }
@@ -75,6 +75,12 @@ function Edit(props) {
     },
     id: {
       "ui:widget": "hidden",
+    },
+    action: {
+      "ui:widget": "hidden",
+      "ui:options": {
+        "addable": false
+      }
     }
   })
 
