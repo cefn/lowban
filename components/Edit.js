@@ -6,6 +6,8 @@ import { host } from "../defaults"
 import { initialCapital } from "../lib/util/javascript"
 import { editableData, storableData } from "../lib/util/form"
 
+//TODO remove and replace with lib/util/graphql invocations
+//which handle errors properly
 async function fetchGraphqlResponse(request) {
   let response = await fetch(`${host}/graphql`, {
     method: "POST",
@@ -77,7 +79,6 @@ function Edit(props) {
       "ui:widget": "hidden",
     },
     action: {
-      "ui:widget": "hidden",
       "ui:options": {
         "addable": false
       }
