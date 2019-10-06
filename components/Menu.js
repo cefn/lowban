@@ -3,7 +3,7 @@ import { Nav, Navbar, NavDropdown, Form, FormControl, Button } from "react-boots
 import { ValueSetter } from "./valueContext"
 
 function Menu(props) {
-  return <Navbar bg="light" expand="lg">
+  return <Navbar bg="light" expand="sm">
     <Navbar.Brand href="#home">Lowban</Navbar.Brand>
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="mr-auto">
