@@ -3,7 +3,7 @@ const {
   iterateParamNames,
   iteratePatternFragments,
   createParamExtractor,
-} = require("../../../../components/deprecated/Frame")
+} = require("../../../components/deprecated/Frame")
 
 test("Names can be extracted from a path pattern", () => {
   const pathPattern = "/list/:type/:filter"
