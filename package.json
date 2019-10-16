@@ -10,19 +10,45 @@
     "test": "jest --collect-coverage"
   },
   "babel": {
+    "sourceMaps": "both",
+    "inputSourceMap": true,
     "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ],
-    "plugins": [
       [
-        "@babel/plugin-transform-runtime",
+        "@babel/preset-env",
         {
-          "regenerator": true
+          "targets": {
+            "chrome": "77",
+            "node": "current"
+          }
         }
-      ]
+      ],
+      "@babel/preset-react",
+      "jest"
     ],
-    "sourceType": "unambiguous"
+    "sourceType": "unambiguous",
+    "env": {
+      "production": {
+        "presets": [
+          "@babel/preset-react",
+          "jest",
+          [
+            "@babel/preset-env",
+            {
+              "debug": false,
+              "useBuiltIns": "usage"
+            }
+          ]
+        ],
+        "plugins": [
+          [
+            "@babel/plugin-transform-runtime",
+            {
+              "regenerator": true
+            }
+          ]
+        ]
+      }
+    }
   },
   "jest": {
     "transformIgnorePatterns": [
@@ -109,7 +135,9 @@
     "react-bootstrap": "^1.0.0-beta.12",
     "react-dom": "^16.9.0",
     "react-jsonschema-form": "^1.7.0",
-    "react-router-dom": "^5.0.1"
+    "react-router-dom": "^5.0.1",
+    "redux": "^4.0.4",
+    "redux-saga": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -138,6 +166,7 @@
     "jquery": "^3.4.1",
     "popper.js": "^1.15.0",
     "prop-types": "^15.7.2",
+    "redux-saga-test-plan": "^4.0.0-rc.3",
     "style-loader": "^1.0.0",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.7"
