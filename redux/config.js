@@ -3,7 +3,7 @@ import { spawn } from "redux-saga/effects"
 
 
 const defaultState = {
-  types: [], //list of types
+  types: ["task", "tag"], //list of types
   schemas: {}, //schemas by type
   ids: {}, //id lists by type
   rows: {}, //map rows first by type, then id (as defined by normalizr)
