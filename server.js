@@ -5,6 +5,7 @@ const expressGraphql = require("express-graphql")
 const { TagStore } = require("./lib/tagstore")
 const { schemaFactory } = require("./lib/taggraphql")
 
+/** Launch a server with the given lowdb instance, on the given port */
 function launchServer(db, port = 3000) {
   //create graphql endpoint
   const store = new TagStore(db)
@@ -28,10 +29,12 @@ function launchServer(db, port = 3000) {
 
   server.use("/", router)
 
-  server.listen(port, err => {
+  const handle = server.listen(port, err => {
     if (err) throw err
     console.log(`> Ready on http://localhost:${port}`)
   })
+
+  return [handle, store]
 
 }
 
