@@ -33,11 +33,11 @@ test("Can set multiple shallow paths to values", () => {
 })
 
 test("Can set deep array paths", () => {
-  expect(reduxStore.getState().types).toEqual([])
+  expect(reduxStore.getState().types).toEqual(["task", "tag"])
   reduxStore.dispatch(setPathsAction({
-    "types[0]": "note",
+    "types[2]": "note",
   }))
-  expect(reduxStore.getState().types).toEqual(["note"])
+  expect(reduxStore.getState().types).toEqual(["task", "tag", "note"])
 })
 
 test("Can set deep object paths", () => {
