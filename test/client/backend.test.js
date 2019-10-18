@@ -22,10 +22,10 @@ function withServerStore(...args) {
   }
 
   return async () => {
-    let handle, store
+    let handle = null, store = null
     try {
-      const db = mockDb(tree);
-      [handle, store] = launchServer(db)
+      const db = mockDb(tree)
+        ;[handle, store] = launchServer(db)
       return await fn(store)
     }
     finally {
@@ -39,18 +39,24 @@ it("Can load a schema", withServerStore(async () => {
   expect(taskSchema).toHaveProperty("$id", "https://github.com/cefn/lowban/tree/v0.2.0/schema/task.schema.json")
 }))
 
-it("Can list ids by item type", withServerStore({ task: [{ id: "a" }, { id: "b" }, { id: "c" }] }, async () => {
-  const itemType = "task"
-  const ids = await backend.loadIds(itemType)
-  expect(ids).toEqual(["a", "b", "c"])
-}))
+it("Can list ids by item type", withServerStore(
+  { task: [{ id: "a" }, { id: "b" }, { id: "c" }] },
+  async () => {
+    const itemType = "task"
+    const ids = await backend.loadIds(itemType)
+    expect(ids).toEqual(["a", "b", "c"])
+  }
+))
 
-it("Can load an item by type and id", withServerStore({ task: [{ id: "a", label: "Ape" }, { id: "b", label: "Bee" }, { id: "c", label: "Cat" }] }, async () => {
-  const itemType = "task"
-  const itemId = "b"
-  const item = await backend.loadItem(itemType, itemId)
-  expect(item.label).toEqual("Bee")
-}))
+it("Can load an item by type and id", withServerStore(
+  { task: [{ id: "a", label: "Ape" }, { id: "b", label: "Bee" }, { id: "c", label: "Cat" }] },
+  async () => {
+    const itemType = "task"
+    const itemId = "b"
+    const item = await backend.loadItem(itemType, itemId)
+    expect(item.label).toEqual("Bee")
+  }
+))
 
 it("Can save item by type, attaching id", withServerStore(async (db) => {
   const itemType = "task"
