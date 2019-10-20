@@ -8,6 +8,8 @@ const { setPathsAction, createSagaPathStore } = require("../redux/store")
 const { defaultState, getSchemaPath, getRowPath } = require("./state")
 const backend = require("../client/backend")
 
+/** Returns as soon as a selected value satisfies a filter. 
+ * If filter not immediately satisfied, checks again after every redux action. */
 function* monitorSelector(valueSelector, valueFilter, takePattern = "*") {
   while (true) {
     const nextValue = yield select(valueSelector)
@@ -18,6 +20,9 @@ function* monitorSelector(valueSelector, valueFilter, takePattern = "*") {
   }
 }
 
+/** Yields to saga(next,previous) when selector returns a defined value.
+ * Subsequently, repeats call wheneve selected value not deep equal to its previous value.
+ */
 function* selectorChangeSaga(selector, saga) {
   let previous
   while (true) {
@@ -27,11 +32,18 @@ function* selectorChangeSaga(selector, saga) {
   }
 }
 
+/** Sets the provided path to the (eventual) result of the invocation.
+ * The invocation is passed to redux-saga call 
+ * (see https://redux-saga.js.org/docs/api/#callfn-args ). */
 function* populatePath(path, ...invocation) {
   const next = yield call(...invocation)
   yield put(setPathsAction({ [path]: next }))
 }
 
+/** Sets the provided path to the (eventual) result of the invocation
+ * if the path is not currently truthy.
+ * The invocation is passed to redux-saga call 
+ * (see https://redux-saga.js.org/docs/api/#callfn-args ). */
 function* lazyPopulatePath(path, ...invocation) {
   const previous = yield select(getPathSelector(path))
   if (previous) {
@@ -42,6 +54,9 @@ function* lazyPopulatePath(path, ...invocation) {
   }
 }
 
+/** Sets the paths in the (eventual) map returned by the invocation
+ * The invocation is passed to redux-saga call 
+ * (see https://redux-saga.js.org/docs/api/#callfn-args ). */
 function* populatePathMap(...invocation) {
   const pathMap = yield call(...invocation)
   yield put(setPathsAction(pathMap))
