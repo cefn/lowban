@@ -73,6 +73,7 @@ function* ensureFocusRowLoaded() {
 
 function* rootSaga() {
   yield spawn(ensureFocusSchemaLoaded)
+  yield spawn(ensureFocusRowLoaded)
 }
 
 function launchRootSaga(initialState = defaultState) {
