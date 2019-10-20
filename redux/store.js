@@ -13,12 +13,7 @@ function setPathsAction(pathMap) {
   }
 }
 
-function* setPathsPromisedSaga(pathMapPromiseFactory, ...factoryArgs) {
-  const pathMap = yield call(pathMapPromiseFactory, ...factoryArgs)
-  yield put(setPathsAction(pathMap))
-}
-
-const setPathsReducer = (state = [], action) => {
+const setPathsReducer = (state = {}, action) => {
   //seeks values and paths in the payload which define merges
   const { type, payload } = action
   if (type === SET_PATHS) {
@@ -49,7 +44,6 @@ function createSagaPathStore(initialState) {
 
 export {
   setPathsAction,
-  setPathsPromisedSaga,
   setPathsReducer,
   createSagaPathStore
 }

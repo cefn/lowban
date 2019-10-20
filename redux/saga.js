@@ -27,27 +27,32 @@ function* selectorChangeSaga(selector, saga) {
   }
 }
 
-function* populate(path, ...invocation) {
+function* populatePath(path, ...invocation) {
   const next = yield call(...invocation)
   yield put(setPathsAction({ [path]: next }))
 }
 
-function* lazyPopulate(path, ...invocation) {
+function* lazyPopulatePath(path, ...invocation) {
   const previous = yield select(getPathSelector(path))
   if (previous) {
     return
   }
   else {
-    yield* populate(path, ...invocation)
+    yield* populatePath(path, ...invocation)
   }
 }
 
+function* populatePathMap(...invocation) {
+  const pathMap = yield call(...invocation)
+  yield put(setPathsAction(pathMap))
+}
+
 function* loadSchema(type) {
-  yield* lazyPopulate(getSchemaPath(type), backend.loadSchema, type)
+  yield* lazyPopulatePath(getSchemaPath(type), backend.loadSchema, type)
 }
 
 function* loadRow(type, id) {
-  yield* lazyPopulate(getRowPath(type, id), backend.loadItem, type, id)
+  yield* lazyPopulatePath(getRowPath(type, id), backend.loadItem, type, id)
 }
 
 function* ensureFocusSchemaLoaded() {
@@ -80,8 +85,9 @@ module.exports = {
   testing: {
     monitorSelector,
     selectorChangeSaga,
-    populate,
-    lazyPopulate,
+    populatePath,
+    lazyPopulatePath,
+    populatePathMap,
     loadSchema,
     loadRow,
     ensureFocusSchemaLoaded,
