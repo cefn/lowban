@@ -1,11 +1,7 @@
-const { defaultState } = require("../../redux/config")
-const { createSagaPathStore, setPathsAction, setPathsPromisedSaga } = require("../../redux/store")
+const { createSagaPathStore, setPathsAction } = require("../../redux/store")
+const { defaultState } = require("../../redux/state")
 
-function promiseTimeout(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms)
-  })
-}
+//TODO Simplify by decoupling scenarios from defaultState (assume empty state?)
 
 let reduxStore = null, sagaMiddleware = null
 beforeEach(() => {
@@ -33,11 +29,11 @@ test("Can set multiple shallow paths to values", () => {
 })
 
 test("Can set deep array paths", () => {
-  expect(reduxStore.getState().types).toEqual(["task", "tag"])
+  expect(reduxStore.getState().types).toEqual(["priority", "status", "context", "schedule", "deadline", "category", "task"])
   reduxStore.dispatch(setPathsAction({
     "types[2]": "note",
   }))
-  expect(reduxStore.getState().types).toEqual(["task", "tag", "note"])
+  expect(reduxStore.getState().types).toEqual(["priority", "status", "note", "schedule", "deadline", "category", "task"])
 })
 
 test("Can set deep object paths", () => {
@@ -48,22 +44,3 @@ test("Can set deep object paths", () => {
   expect(reduxStore.getState().ids.note).toEqual(["note-row-id"])
 })
 
-test("Can set path to eventual promise value", async () => {
-  //check empty
-  expect(reduxStore.getState().rows).toEqual({})
-  //define row
-  const row = { id: "promised-row-id", title: "promised-row-title" }
-  //creates delayed promise for pathMap to insert the row into 'rows'
-  const promiseRowPathMap = async () => {
-    await promiseTimeout(1000)
-    return {
-      "rows.promised-row-id": row
-    }
-  }
-  //launch the saga with the promise factory
-  const sagaTask = sagaMiddleware.run(setPathsPromisedSaga, promiseRowPathMap)
-  //wait for saga to complete
-  await sagaTask.toPromise()
-  //check store state
-  expect(reduxStore.getState().rows["promised-row-id"]).toEqual(row)
-})
