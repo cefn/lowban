@@ -12,6 +12,7 @@ function mockDb(tree) {
 }
 
 function withServerStore(...args) {
+  //intepret arguments
   let tree, fn
   if (args.length == 1) { //handle single arg as fn (tree undefined)
     [fn] = args
@@ -21,6 +22,7 @@ function withServerStore(...args) {
     [tree, fn] = args
   }
 
+  //launch the server, pass server's store to fn(), close the server
   return async () => {
     let handle = null, store = null
     try {
