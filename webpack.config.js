@@ -5,11 +5,11 @@ module.exports = {
   mode: mode,
   devtool: "eval-source-map",
   entry: {
-    "main": "index.js"
+    "main": "client/frontend.js"
   },
   output: {
     path: path.join(__dirname, "/static/build/"),
-    filename: "index.js",
+    filename: "frontent.js",
     publicPath: "/static/build/"
   }
   ,
