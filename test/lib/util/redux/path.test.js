@@ -13,7 +13,7 @@ const {
 } = require("../../../../lib/util/redux/path")
 
 //TODO Simplify by decoupling scenarios from defaultState (assume empty state?)
-const { defaultState } = require("../../../../domain/todo/store") //todo remove this domain-specific reference
+const { defaultState } = require("../../../../domain/todo/redux/store") //todo remove this domain-specific reference
 
 describe("Check behaviour of setPathsAction", () => {
 

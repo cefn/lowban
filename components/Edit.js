@@ -4,7 +4,7 @@ import Form from "react-jsonschema-form"
 import fetch from "isomorphic-unfetch"
 import { host } from "../defaults"
 import { initialCapital } from "../lib/util/javascript"
-import { editableData, storableData } from "../lib/util/form"
+import { editableData, storableData } from "../domain/todo/schema/form"
 
 //TODO remove and replace with lib/util/graphql invocations
 //which handle errors properly
@@ -124,12 +124,12 @@ function Edit(props) {
 
   useEffect(() => {
     refreshSchema()
-  }, [props.typeName])
+  }, [props.typeName, refreshSchema])
 
 
   useEffect(() => {
     refreshData()
-  }, [props.typeName, props.id])
+  }, [props.typeName, props.id, refreshData])
 
   const handleChange = async ({ formData }, _e) => {
     setFormData(formData)

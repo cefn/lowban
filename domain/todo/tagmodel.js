@@ -15,7 +15,7 @@
 
 const {
   jointComparatorFactory
-} = require("../lib/util/javascript")
+} = require("../../lib/util/javascript")
 const _ = require("lodash")
 
 //Define a pattern matches both space-separated tags, AND quoted space-separated tags

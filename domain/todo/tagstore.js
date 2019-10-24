@@ -1,8 +1,8 @@
 const autoBind = require("auto-bind")
 const {
   LowStore
-} = require("./lowstore")
-const { escapeRegExp } = require("./util/javascript")
+} = require("../../lib/lowstore")
+const { escapeRegExp } = require("../../lib/util/javascript")
 const {
   getNow,
   storedDataTypes,

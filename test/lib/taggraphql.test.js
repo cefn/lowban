@@ -1,8 +1,8 @@
 "use strict"
 const { getLocalResponse } = require("../../lib/util/graphql")
 const { dbInMemory } = require("../../lib/lowstore")
-const { createDefaultTree, TagStore } = require("../../lib/tagstore")
-const { schemaFactory } = require("../../lib/taggraphql")
+const { createDefaultTree, TagStore } = require("../../domain/todo/tagstore")
+const { schemaFactory } = require("../../domain/todo/schema/graphql")
 
 function createMockTagStore(mockTree) {
   const db = dbInMemory(createDefaultTree()) //initialise db

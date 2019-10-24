@@ -3,8 +3,8 @@ const { dbInMemory } = require("../../lib/lowstore")
 const {
   storedDataTypes,
   listedDataTypes
-} = require("../../lib/tagmodel")
-const { createDefaultTree, TagStore } = require("../../lib/tagstore")
+} = require("../../domain/todo/tagmodel")
+const { createDefaultTree, TagStore } = require("../../domain/todo/tagstore")
 
 function mockTagStore(tree) {
   if (!tree) {

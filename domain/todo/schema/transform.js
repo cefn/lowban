@@ -3,9 +3,9 @@ const path = require("path")
 const _ = require("lodash")
 const refParser = require("json-schema-ref-parser")
 const mergeAllOf = require("json-schema-merge-allof")
-const { depthFirstWalk } = require("./walk")
+const { depthFirstWalk } = require("../../../lib/util/walk")
 
-const { domain: defaultDomain } = require("../../defaults")
+const { domain: defaultDomain } = require("../../../defaults")
 
 /** BEGIN TMP workaround to have a shared field list for GraphQL schema clients
  * TODO should be derived from schema files 
@@ -46,7 +46,7 @@ async function editableSchema(typeName, domain = defaultDomain) {
   //load schema for this type
   const schemaPath = path.resolve(
     __dirname,
-    `../../domain/${domain}/schema/${typeName}.schema.json`
+    `./json/${typeName}.schema.json`
   )
   let schema = JSON.parse(fs.readFileSync(schemaPath))
   //rewrite schema to allow space-separated tag ids

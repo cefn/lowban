@@ -32,7 +32,7 @@ const {
   isTaskClosed,
   whenTaskDue,
   getNow,
-} = require("../../lib/tagmodel")
+} = require("../../domain/todo/tagmodel")
 
 const oneDayInMs = periodLookupMs["daily"]
 const oneWeekInMs = periodLookupMs["weekly"]

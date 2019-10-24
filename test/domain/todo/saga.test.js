@@ -10,7 +10,7 @@ const {
   ensureFocusSchemaLoaded,
   ensureFocusRowLoaded,
   rootSaga,
-} = require("../../../domain/todo/saga")
+} = require("../../../domain/todo/redux/saga")
 
 describe("loadSchema() loads schema for type if not yet set", () => {
   const testType = "type-x"

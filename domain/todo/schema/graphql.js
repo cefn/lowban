@@ -1,7 +1,7 @@
 /** TODO add contexts, statuses, priorities */
 const { makeExecutableSchema } = require("graphql-tools")
-const { storedDataTypes, getTagType } = require("./tagmodel")
-const { initialCapital } = require("./util/javascript")
+const { storedDataTypes, getTagType } = require("../tagmodel")
+const { initialCapital } = require("../../../lib/util/javascript")
 
 //TODO remove use of makeExecutableSchema - compiler too buggy
 

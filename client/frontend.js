@@ -1,13 +1,13 @@
-import React from "react"
-import ReactDom from "react-dom"
-import { Provider } from "react-redux"
+const React = require("react")
+const ReactDom = require("react-dom")
+const { Provider } = require("react-redux")
+const { connect } = require("react-redux")
+const { setPathsAction } = require("../lib/util/redux/path")
+const { saveItemAction } = require("../domain/todo/redux/action")
 
-import { connect } from "react-redux"
-import { setPathsAction } from "../lib/util/redux/path"
-import { saveItemAction } from "../domain/action"
-import { launchRootSaga } from "../domain/saga"
+const { launchRootSaga } = require("../domain/todo/redux/saga")
 
-import Editor from "./controls/Editor"
+const Editor = require("./controls/Editor")
 
 const [reduxStore, sagaMiddleware, rootTask] = launchRootSaga()
 

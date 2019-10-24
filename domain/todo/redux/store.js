@@ -1,4 +1,4 @@
-const { storedDataTypes } = require("../../lib/tagmodel")
+const { storedDataTypes } = require("../tagmodel")
 
 const defaultState = {
   types: [...storedDataTypes], //list of types

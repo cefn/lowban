@@ -2,8 +2,8 @@ const nodeFetch = require("node-fetch")
 const { getRemoteResponse } = require("../lib/util/graphql")
 const { host } = require("../defaults")
 const { initialCapital } = require("../lib/util/javascript")
-const { getPropertyNames } = require("../lib/util/schema")
-const { storableData, editableData } = require("../lib/util/form")
+const { getPropertyNames } = require("../domain/todo/schema/transform")
+const { storableData, editableData } = require("../domain/todo/schema/form")
 
 async function getFromPath(path) {
   const url = `${host}/${path}`

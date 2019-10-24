@@ -2,7 +2,7 @@ const backend = require("../../client/backend")
 
 const { launchServer } = require("../../server")
 const { dbInMemory } = require("../../lib/lowstore")
-const { createDefaultTree } = require("../../lib/tagstore")
+const { createDefaultTree } = require("../../domain/todo/tagstore")
 
 function mockDb(tree) {
   if (!tree) {

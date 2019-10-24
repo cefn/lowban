@@ -2,8 +2,8 @@ const express = require("express")
 const expressPromiseRouter = require("express-promise-router")
 const expressGraphql = require("express-graphql")
 
-const { TagStore } = require("./lib/tagstore")
-const { schemaFactory } = require("./lib/taggraphql")
+const { TagStore } = require("./domain/todo/tagstore")
+const { schemaFactory } = require("./domain/todo/schema/graphql")
 
 /** Launch a server with the given lowdb instance, on the given port */
 function launchServer(db, port = 3000) {
@@ -16,7 +16,7 @@ function launchServer(db, port = 3000) {
   })
 
   //create schema endpoint
-  const { editableSchemaMiddleware } = require("./lib/util/schema")
+  const { editableSchemaMiddleware } = require("./domain/todo/schema/transform")
 
   const server = express()
   const router = expressPromiseRouter()

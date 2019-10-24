@@ -2,9 +2,9 @@ const { spawn } = require("redux-saga/effects")
 
 const { launchStore } = require("./store")
 const { defaultState, getSchemaPath, getRowPath } = require("./store")
-const { lazyPopulatePathSaga, } = require("../../lib/util/redux/path")
-const { selectorChangeSaga } = require("../../lib/util/redux/watch")
-const backend = require("../../client/backend")
+const { lazyPopulatePathSaga, } = require("../../../lib/util/redux/path")
+const { selectorChangeSaga } = require("../../../lib/util/redux/watch")
+const backend = require("../../../client/backend")
 
 function* loadSchema(type) {
   yield* lazyPopulatePathSaga(getSchemaPath(type), backend.loadSchema, type)
