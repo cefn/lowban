@@ -1,4 +1,4 @@
-import { storedDataTypes } from "../lib/tagmodel"
+const { storedDataTypes } = require("../../lib/tagmodel")
 
 const defaultState = {
   types: [...storedDataTypes], //list of types
@@ -18,8 +18,13 @@ function getSchemaPath(type) {
   return `schemas.${type}`
 }
 
+function focusSelector(state) {
+  return [state.focusType, state.focusId]
+}
+
 module.exports = {
   defaultState,
   getRowPath,
   getSchemaPath,
+  focusSelector
 }
