@@ -1,6 +1,6 @@
 const nodeFetch = require("node-fetch")
 const { getRemoteResponse } = require("../lib/util/graphql")
-const { host } = require("../defaults")
+const { host } = require("../server/defaults")
 const { initialCapital } = require("../lib/util/javascript")
 const { getPropertyNames } = require("../domain/todo/schema/transform")
 const { storableData, editableData } = require("../domain/todo/schema/form")

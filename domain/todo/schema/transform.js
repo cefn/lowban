@@ -1,11 +1,10 @@
 const fs = require("fs")
 const path = require("path")
-const _ = require("lodash")
 const refParser = require("json-schema-ref-parser")
 const mergeAllOf = require("json-schema-merge-allof")
 const { depthFirstWalk } = require("../../../lib/util/walk")
 
-const { domain: defaultDomain } = require("../../../defaults")
+const { domain: defaultDomain } = require("../../../server/defaults")
 
 /** BEGIN TMP workaround to have a shared field list for GraphQL schema clients
  * TODO should be derived from schema files 
@@ -42,7 +41,7 @@ async function flattenSchema(schema) {
  * client-side by react-jsonschema-form with $ref and allOf references resolved
  * @param {*} typeName the type for which to simplify the schema
  */
-async function editableSchema(typeName, domain = defaultDomain) {
+async function editableSchema(typeName) {
   //load schema for this type
   const schemaPath = path.resolve(
     __dirname,
