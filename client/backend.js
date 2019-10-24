@@ -22,7 +22,7 @@ async function loadSchema(itemType) {
   return schema
 }
 
-//TODO implement itemTypes retriever via store, and corresponding saga (instead of hard-coded values in defaultState)
+//TODO implement itemTypes retriever via store and corresponding saga (instead of hard-coded values in defaultState)
 /*
 async function loadItemTypes() {
   return await getRemoteResponse()
