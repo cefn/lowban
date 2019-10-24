@@ -1,9 +1,10 @@
 const host = "http://localhost:3000"
-const mode = "development"
-const endpoint = `${host}/graphql`
 
-module.exports = {
+const defaultMap = {
   host,
-  mode,
-  endpoint
+  mode: "development",
+  endpoint: `${host}/graphql`,
+  domain: "todo",
 }
+
+module.exports = defaultMap
