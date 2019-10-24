@@ -2,11 +2,11 @@ const express = require("express")
 const expressPromiseRouter = require("express-promise-router")
 const expressGraphql = require("express-graphql")
 
-const { TagStore } = require("./domain/todo/tagstore")
-const { schemaFactory } = require("./domain/todo/schema/graphql")
+const { TagStore } = require("../domain/todo/tagstore")
+const { schemaFactory } = require("../domain/todo/schema/graphql")
 
 /** Launch a server with the given lowdb instance, on the given port */
-function launchServer(db, port = 3000) {
+function hostDb(db, port = 3000) {
   //create graphql endpoint
   const store = new TagStore(db)
   const schema = schemaFactory(store)
@@ -16,7 +16,7 @@ function launchServer(db, port = 3000) {
   })
 
   //create schema endpoint
-  const { editableSchemaMiddleware } = require("./domain/todo/schema/transform")
+  const { editableSchemaMiddleware } = require("../domain/todo/schema/transform")
 
   const server = express()
   const router = expressPromiseRouter()
@@ -31,7 +31,7 @@ function launchServer(db, port = 3000) {
 
   const handle = server.listen(port, err => {
     if (err) throw err
-    console.log(`> Ready on http://localhost:${port}`)
+    console.log(`> Ready on http://localhost:${port}`) //TODO strategy to suppress console output during tests
   })
 
   return [handle, store]
@@ -39,6 +39,6 @@ function launchServer(db, port = 3000) {
 }
 
 module.exports = {
-  launchServer
+  hostDb
 }
 
