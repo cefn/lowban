@@ -1,7 +1,7 @@
 const { call } = require("redux-saga/effects")
 const { expectSaga } = require("redux-saga-test-plan")
-const backend = require("../../../client/backend")
-const { setPathsAction, setPathsReducer } = require("../../../lib/util/redux/path")
+const backend = require("../../../../client/backend")
+const { setPathsAction, setPathsReducer } = require("../../../../lib/util/redux/path")
 
 
 const {
@@ -10,7 +10,7 @@ const {
   ensureFocusSchemaLoaded,
   ensureFocusRowLoaded,
   rootSaga,
-} = require("../../../domain/todo/redux/saga")
+} = require("../../../../domain/todo/redux/saga")
 
 describe("loadSchema() loads schema for type if not yet set", () => {
   const testType = "type-x"

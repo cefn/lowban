@@ -1,10 +1,10 @@
 const _ = require("lodash")
-const { dbInMemory } = require("../../lib/lowstore")
+const { dbInMemory } = require("../../../lib/lowstore")
 const {
   storedDataTypes,
   listedDataTypes
-} = require("../../domain/todo/tagmodel")
-const { createDefaultTree, TagStore } = require("../../domain/todo/tagstore")
+} = require("../../../domain/todo/tagmodel")
+const { createDefaultTree, TagStore } = require("../../../domain/todo/tagstore")
 
 function mockTagStore(tree) {
   if (!tree) {

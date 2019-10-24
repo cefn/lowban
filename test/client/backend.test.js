@@ -1,6 +1,6 @@
 const backend = require("../../client/backend")
 
-const { launchServer } = require("../../server")
+const { hostDb: launchServer } = require("../../server/host")
 const { dbInMemory } = require("../../lib/lowstore")
 const { createDefaultTree } = require("../../domain/todo/tagstore")
 
