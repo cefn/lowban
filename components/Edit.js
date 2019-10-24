@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import Form from "react-jsonschema-form"
 import fetch from "isomorphic-unfetch"
-import { host } from "../defaults"
+import { host } from "../server/defaults"
 import { initialCapital } from "../lib/util/javascript"
 import { editableData, storableData } from "../domain/todo/schema/form"
 
