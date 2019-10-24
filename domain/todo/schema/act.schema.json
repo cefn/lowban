@@ -1,5 +1,5 @@
 {
-  "$id": "https://github.com/cefn/lowban/tree/v0.2.0/schema/action.schema.json",
+  "$id": "https://github.com/cefn/lowban/tree/v0.2.0/domain/todo/schema/act.schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "allOf": [
     {

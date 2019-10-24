@@ -1,0 +1,14 @@
+{
+  "$id": "https://github.com/cefn/lowban/tree/v0.2.0/domain/todo/schema/task.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "$ref": "item.schema.json"
+    },
+    {
+      "required": [
+        "id"
+      ]
+    }
+  ]
+}
