@@ -16,13 +16,13 @@ function launchServer(db, port = 3000) {
   })
 
   //create schema endpoint
-  const simplifySchema = require("./lib/middleware/simplifySchema")
+  const { editableSchemaMiddleware } = require("./lib/util/schema")
 
   const server = express()
   const router = expressPromiseRouter()
 
   router.use("/graphql", graphqlEndpoint)
-  router.get("/schema/:typeName", simplifySchema)
+  router.get("/schema/:typeName", editableSchemaMiddleware)
 
   router.use(express.static("static"))
   router.use("/", (_req, res, _next) => res.sendFile(__dirname + "/index.html"))
