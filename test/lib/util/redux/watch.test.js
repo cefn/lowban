@@ -1,32 +1,16 @@
-const { promiseDelay, promiseDelayValue } = require("../../lib/util/javascript")
-const { call, select } = require("redux-saga/effects")
-
 const { expectSaga } = require("redux-saga-test-plan")
-const backend = require("../../client/backend")
+const { setPathsAction, setPathsReducer } = require("../../../../lib/util/redux/path")
 
-import { setPathsAction, setPathsReducer } from "../../redux/store"
 const {
-  testing: {
-    monitorSelector,
-    selectorChangeSaga,
-    populatePath,
-    lazyPopulatePath,
-    populatePathMap,
-    loadSchema,
-    loadRow,
-    ensureFocusSchemaLoaded,
-    ensureFocusRowLoaded,
-    rootSaga,
-  }
-} = require("../../redux/saga")
-
+  monitorSelector,
+  selectorChangeSaga,
+} = require("../../../../lib/util/redux/watch")
 
 function runSagaExample(chainFn, ...sagaInvocation) {
   const scenario = expectSaga(...sagaInvocation).withReducer(setPathsReducer)
   const assertionChain = chainFn(scenario)
   return assertionChain.silentRun(10) //10ms timeout, don't warn to console when saga times out
 }
-
 
 describe("monitorSelector() returns when store's selected state value, actions meet criteria", () => {
 
@@ -186,155 +170,4 @@ describe("selectorChangeSaga() triggers callback when new value for selector not
 
 })
 
-describe("populatePath() sets path with eventual value of invocation", () => {
 
-  it("Sets shallow path to scalar value through invocation of synchronous function", async () => {
-    const path = "hello"
-    const valueFactory = () => "world"
-    const result = await expectSaga(populatePath, path, valueFactory)
-      .withReducer(setPathsReducer)
-      .hasFinalState({ hello: "world" })
-      .run()
-  })
-
-  it("Sets shallow path to scalar value through invocation of async function", async () => {
-    const path = "hello"
-    const value = "world"
-    const result = await expectSaga(populatePath, path, promiseDelayValue, value, 1)
-      .withReducer(setPathsReducer)
-      .hasFinalState({ hello: "world" })
-      .run()
-  })
-
-  it("Sets deep path to scalar value through invocation of async function", async () => {
-    const path = "grandparent.parent.child"
-    const value = "foo"
-    const result = await expectSaga(populatePath, path, promiseDelayValue, value, 1)
-      .withReducer(setPathsReducer)
-      .hasFinalState({ grandparent: { parent: { child: "foo" } } })
-      .run()
-  })
-
-})
-
-describe("lazyPopulate() only sets eventual value if path non-empty", () => {
-
-  it("Doesn't overwrite occupied shallow path with synchronous function", async () => {
-    const path = "hello"
-    const valueFactory = () => "world"
-    const result = await expectSaga(lazyPopulatePath, path, valueFactory)
-      .withReducer(setPathsReducer)
-      .withState({ hello: "mars" })
-      .hasFinalState({ hello: "mars" })
-      .run()
-  })
-
-  it("Doesn't overwrite occupied shallow path with async function", async () => {
-    const path = "hello"
-    const value = "world"
-    const result = await expectSaga(lazyPopulatePath, path, promiseDelayValue, value, 1)
-      .withReducer(setPathsReducer, { hello: "mars" })
-      .hasFinalState({ hello: "mars" })
-      .run()
-  })
-
-  it("Doesn't overwrite occupied deep path with async function", async () => {
-    const path = "grandparent.parent.child"
-    const value = "foo"
-    const result = await expectSaga(lazyPopulatePath, path, promiseDelayValue, value, 1)
-      .withReducer(setPathsReducer)
-      .withState({ grandparent: { parent: { child: "bar" } } })
-      .hasFinalState({ grandparent: { parent: { child: "bar" } } })
-      .run()
-  })
-
-})
-
-describe("populatePathMap sets multiple paths in store state using eventual value of invocation", () => {
-
-  it("Can handle multiple keys in a pathMap", async () => {
-    const promiseMap = () => Promise.resolve({
-      "grandparent.parent.son": "foo",
-      "grandparent.parent.daughter": "bar"
-    })
-    const result = await expectSaga(populatePathMap, promiseMap)
-      .withReducer(setPathsReducer)
-      .hasFinalState({ grandparent: { parent: { son: "foo", daughter: "bar" } } })
-      .run()
-  })
-
-})
-
-describe("loadSchema() loads schema for type if not yet set", () => {
-  const testType = "type-x"
-  const schemaMock = {} //fake schema object (tested by identity)
-
-  it("loads schema", async () => {
-    const result = await expectSaga(loadSchema, testType)
-      .withReducer(setPathsReducer)
-      .provide([
-        [call(backend.loadSchema, testType), schemaMock], //mock the retrieval 
-      ])
-      .hasFinalState({ schemas: { [testType]: schemaMock } })
-      .silentRun(10)
-
-  })
-
-})
-
-//TODO change references to Row to be Item (since not necessarily columnar data)
-describe("loadRow() loads row if not yet set", () => {
-  it("loads row", async () => {
-    const testType = "type-x"
-    const testId = "abc"
-    const testRow = { id: "abc", label: "Description" } //fake schema object (tested by identity)
-    const result = await expectSaga(loadRow, testType, testId)
-      .withReducer(setPathsReducer)
-      .provide([
-        [call(backend.loadItem, testType, testId), testRow], //mock the retrieval 
-      ])
-      .hasFinalState({ rows: { [testType]: { [testId]: testRow } } })
-      .silentRun(10)
-  })
-})
-
-describe("ensureFocusRowLoaded() monitors focus, loads row having focusType, focusId ", () => {
-
-  it("ensureFocusRowLoaded() loads schema when type focused", async () => {
-    const testType = "type-x"
-    const testId = "abc"
-    const testRow = { id: "abc", label: "Description" } //fake schema object (tested by identity)
-
-    //configure saga test
-    const result = await expectSaga(ensureFocusRowLoaded)
-      .withReducer(setPathsReducer)
-      .provide([
-        [call(backend.loadItem, testType, testId), testRow], //mock the retrieval 
-      ])
-      .dispatch(setPathsAction({ focusType: testType, focusId: testId })) //emulate setting the focusType
-      .hasFinalState({ focusType: testType, focusId: testId, rows: { [testType]: { [testId]: testRow } } })
-      .silentRun(10)
-  })
-
-
-})
-
-
-describe("ensureSchemaLoaded() monitors focusType, loads schema for focusType", () => {
-
-  it("ensureSchemaLoaded() loads schema when type focused", async () => {
-    const testType = "type-x"
-    const schemaMock = {} //fake schema object (tested by identity)
-
-    //configure saga test
-    const result = await expectSaga(ensureFocusSchemaLoaded)
-      .withReducer(setPathsReducer)
-      .provide([
-        [call(backend.loadSchema, testType), schemaMock], //mock the retrieval 
-      ])
-      .dispatch(setPathsAction({ focusType: testType })) //emulate setting the focusType
-      .hasFinalState({ focusType: testType, schemas: { [testType]: schemaMock } })
-      .silentRun(10)
-  })
-
-})

@@ -38,7 +38,7 @@ function withServerStore(...args) {
 
 it("Can load a schema", withServerStore(async () => {
   const taskSchema = await backend.loadSchema("task")
-  expect(taskSchema).toHaveProperty("$id", "https://github.com/cefn/lowban/tree/v0.2.0/schema/task.schema.json")
+  expect(taskSchema).toHaveProperty("$id", "https://github.com/cefn/lowban/tree/v0.2.0/domain/todo/schema/task.schema.json")
 }))
 
 it("Can list ids by item type", withServerStore(
