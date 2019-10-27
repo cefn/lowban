@@ -1,3 +1,4 @@
+const path = require("path")
 const express = require("express")
 const expressPromiseRouter = require("express-promise-router")
 const expressGraphql = require("express-graphql")
@@ -16,7 +17,7 @@ function hostDb(db, port = 3000) {
   })
 
   //create schema endpoint
-  const { editableSchemaMiddleware } = require("../domain/todo/schema/transform")
+  const { editableSchemaMiddleware } = require("../domain/todo/schema/middleware")
 
   const server = express()
   const router = expressPromiseRouter()
@@ -25,7 +26,7 @@ function hostDb(db, port = 3000) {
   router.get("/schema/:typeName", editableSchemaMiddleware)
 
   router.use(express.static("static"))
-  router.use("/", (_req, res, _next) => res.sendFile(__dirname + "/index.html"))
+  router.use("/", (_req, res, _next) => res.sendFile(path.resolve(__dirname, "./../client/frontend.html")))
 
   server.use("/", router)
 
