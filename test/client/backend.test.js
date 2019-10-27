@@ -1,8 +1,12 @@
-const backend = require("../../client/backend")
+const { createBackend } = require("../../client/backend")
 
-const { hostDb: launchServer } = require("../../server/host")
+const { hostDb } = require("../../server/host")
 const { dbInMemory } = require("../../lib/lowstore")
 const { createDefaultTree } = require("../../domain/todo/tagstore")
+
+const port = 3001
+const host = `http://localhost:${port}`
+const backend = createBackend(host)
 
 function mockDb(tree) {
   if (!tree) {
@@ -27,7 +31,7 @@ function withServerStore(...args) {
     let handle = null, store = null
     try {
       const db = mockDb(tree)
-        ;[handle, store] = launchServer(db)
+        ;[handle, store] = hostDb(db, port)
       return await fn(store)
     }
     finally {

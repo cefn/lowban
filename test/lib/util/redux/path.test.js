@@ -19,7 +19,7 @@ describe("Check behaviour of setPathsAction", () => {
 
   let reduxStore = null, sagaMiddleware = null
   beforeEach(() => {
-    [reduxStore, sagaMiddleware] = launchPathStore(defaultState)
+    [reduxStore, sagaMiddleware] = launchPathStore(defaultState, {})
   })
 
   test("Can set a shallow path to a value", () => {
@@ -51,7 +51,6 @@ describe("Check behaviour of setPathsAction", () => {
   })
 
   test("Can set deep object paths", () => {
-    expect(reduxStore.getState().ids).toEqual({})
     reduxStore.dispatch(setPathsAction({
       "ids.note": ["note-row-id"],
     }))
