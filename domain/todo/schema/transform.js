@@ -4,32 +4,6 @@ const refParser = require("json-schema-ref-parser")
 const mergeAllOf = require("json-schema-merge-allof")
 const { depthFirstWalk } = require("../../../lib/util/walk")
 
-const { domain: defaultDomain } = require("../../../server/defaults")
-
-/** BEGIN TMP workaround to have a shared field list for GraphQL schema clients
- * TODO should be derived from schema files 
- * TODO should be used to construct graphql schema
- * TODO should be hoisted into config */
-const itemSchema = {
-  id: "string",
-  label: "string",
-  note: "string",
-}
-
-const schemaMap = {
-  "task": {
-    ...itemSchema,
-    tagIds: "array"
-  },
-  "category": { ...itemSchema },
-  "priority": { ...itemSchema },
-  "schedule": { ...itemSchema },
-  "deadline": { ...itemSchema },
-  "context": { ...itemSchema },
-  "status": { ...itemSchema }
-}
-/** END TMP */
-
 async function flattenSchema(schema) {
   schema = await refParser.bundle(schema) //dereferences $ref
   schema = mergeAllOf(schema) //merges allOf
@@ -64,18 +38,6 @@ async function editableSchema(typeName) {
   return schema
 }
 
-function getPropertyNames(itemType) {
-  return Object.keys(schemaMap[itemType])
-}
-
-/** Serves an editableSchema JSON schema version for the type passed as req.params.typeName */
-async function editableSchemaMiddleware(req, res, _next) {
-  const schema = await editableSchema(req.params.typeName, req.params.domain)
-  res.json(schema)
-}
-
 module.exports = {
   editableSchema,
-  editableSchemaMiddleware,
-  getPropertyNames
 }
