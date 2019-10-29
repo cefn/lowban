@@ -1,25 +1,41 @@
 const { setPathsAction } = require("../../../lib/util/redux/path")
 
-const SAVE_ITEM = "save-item"
 
-function saveItemAction(type, item) {
-  return {
-    type: SAVE_ITEM,
-    payload: {
-      type,
-      item
-    }
-  }
+/** USER-INITIATED ACTIONS */
+
+const SAVE_EDITED_ITEM = "save-edited-item"
+
+function emptyAction(typeName) {
+  return { type: typeName }
 }
 
-function focusAction(focusType, focusId) {
+function saveItemAction() { return emptyAction(SAVE_EDITED_ITEM) }
+
+/** STORE MANIPULATION ACTIONS */
+
+function setEditedAction(type, id) {
   return setPathsAction({
-    focusType,
-    focusId,
+    "editor.type": type,
+    "editor.id": id,
+  })
+}
+
+function filterTagsAction(tagFilterString) {
+  return setPathsAction({
+    tagFilterString
+  })
+}
+
+function filterTasksAction(taskFilterString) {
+  return setPathsAction({
+    taskFilterString
   })
 }
 
 module.exports = {
+  SAVE_EDITED_ITEM,
   saveItemAction,
-  focusAction,
+  setEditedAction,
+  filterTagsAction,
+  filterTasksAction,
 }
