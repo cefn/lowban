@@ -1,0 +1,44 @@
+{
+  "$id": "https://github.com/cefn/lowban/tree/v0.2.0/domain/todo/schema/act.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "allOf": [
+    {
+      "type": "object",
+      "properties": {
+        "instant": {
+          "type": "integer"
+        }
+      }
+    }
+  ],
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "create"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "snooze"
+        },
+        "until": {
+          "$comment": "Snooze until",
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "fulfil"
+        }
+      }
+    }
+  ]
+}

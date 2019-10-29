@@ -1,15 +1,15 @@
 const path = require("path")
-const { mode } = require("./defaults")
+const { mode } = require("./server/defaults")
 
 module.exports = {
   mode: mode,
   devtool: "eval-source-map",
   entry: {
-    "main": "index.js"
+    "main": "client/frontend.js"
   },
   output: {
     path: path.join(__dirname, "/static/build/"),
-    filename: "index.js",
+    filename: "frontend.js",
     publicPath: "/static/build/"
   }
   ,

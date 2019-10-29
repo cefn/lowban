@@ -1,6 +1,6 @@
 import React from "react"
 import { Nav, Navbar, NavDropdown, Form, FormControl, Button } from "react-bootstrap"
-import { ValueSetter } from "./valueContext"
+import { ValueSetter } from "../lib/util/react/click"
 
 function Menu(props) {
   return <Navbar bg="light" expand="sm">

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import Form from "react-jsonschema-form"
 import fetch from "isomorphic-unfetch"
-import { host } from "../defaults"
+import { host } from "../server/defaults"
 import { initialCapital } from "../lib/util/javascript"
-import { editableData, storableData } from "../lib/util/form"
+import { editableData, storableData } from "../domain/todo/schema/form"
 
+//TODO remove and replace with lib/util/graphql invocations
+//which handle errors properly
 async function fetchGraphqlResponse(request) {
   let response = await fetch(`${host}/graphql`, {
     method: "POST",
@@ -77,7 +79,6 @@ function Edit(props) {
       "ui:widget": "hidden",
     },
     action: {
-      "ui:widget": "hidden",
       "ui:options": {
         "addable": false
       }
@@ -123,12 +124,12 @@ function Edit(props) {
 
   useEffect(() => {
     refreshSchema()
-  }, [props.typeName])
+  }, [props.typeName, refreshSchema])
 
 
   useEffect(() => {
     refreshData()
-  }, [props.typeName, props.id])
+  }, [props.typeName, props.id, refreshData])
 
   const handleChange = async ({ formData }, _e) => {
     setFormData(formData)

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Form } from "react-bootstrap"
 import { getRemoteResponse } from "../lib/util/graphql"
-import { ValueSetter } from "./valueContext"
+import { ValueSetter } from "../lib/util/react/click"
 
 function FilteredTagList(props) {
   const [filterString, setFilterString] = useState("")

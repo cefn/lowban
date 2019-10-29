@@ -10,7 +10,7 @@ import Menu from "./Menu"
 import Edit from "./Edit"
 import FilteredTaskList from "./FilteredTaskList"
 import FilteredTagList from "./FilteredTagList"
-import { ValueRoot, ValueGetter } from "./valueContext"
+import { ValueRoot, ValueGetter } from "../lib/util/react/click"
 
 export default function Dash(props) {
 

@@ -7,22 +7,26 @@
     "start": "babel-watch --exclude db.json app.js",
     "build": "webpack",
     "watch": "webpack --watch",
-    "test": "jest --collect-coverage"
+    "test": "jest --silent",
+    "coverage": "jest --collect-coverage"
   },
   "babel": {
+    "sourceMaps": "inline",
+    "inputSourceMap": true,
+    "retainLines": true,
     "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ],
-    "plugins": [
       [
-        "@babel/plugin-transform-runtime",
+        "@babel/preset-env",
         {
-          "regenerator": true
+          "targets": {
+            "chrome": "77",
+            "node": "current"
+          }
         }
-      ]
-    ],
-    "sourceType": "unambiguous"
+      ],
+      "@babel/preset-react",
+      "jest"
+    ]
   },
   "jest": {
     "transformIgnorePatterns": [
@@ -56,7 +60,8 @@
     },
     "plugins": [
       "react",
-      "react-hooks"
+      "react-hooks",
+      "redux-saga"
     ],
     "rules": {
       "indent": [
@@ -88,6 +93,8 @@
   "author": "Cefn Hoile",
   "license": "GPL",
   "dependencies": {
+    "@material-ui/core": "^4.5.1",
+    "@material-ui/icons": "^4.5.1",
     "auto-bind": "^2.1.0",
     "bootstrap": "^4.3.1",
     "ejs": "^2.6.2",
@@ -109,7 +116,11 @@
     "react-bootstrap": "^1.0.0-beta.12",
     "react-dom": "^16.9.0",
     "react-jsonschema-form": "^1.7.0",
-    "react-router-dom": "^5.0.1"
+    "react-redux": "^7.1.1",
+    "react-router-dom": "^5.0.1",
+    "redux": "^4.0.4",
+    "redux-form": "^8.2.6",
+    "redux-saga": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -133,11 +144,13 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.0.1",
+    "eslint-plugin-redux-saga": "^1.1.1",
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^24.8.0",
     "jquery": "^3.4.1",
     "popper.js": "^1.15.0",
     "prop-types": "^15.7.2",
+    "redux-saga-test-plan": "^4.0.0-rc.3",
     "style-loader": "^1.0.0",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.7"
