@@ -64,6 +64,7 @@ function createBackend(host) {
   }
 
   async function saveItem(itemType, item) {
+    //TODO use common implementation for arg-based saving mutations AND loading queries ^^^
     const sent = storableData(item) //make schema-compliant
     let variables = { sent }
     let resolverName = `${itemType}Merge`
