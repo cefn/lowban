@@ -18,15 +18,26 @@ const schemaMap = {
   "schedule": { ...itemSchema },
   "deadline": { ...itemSchema },
   "context": { ...itemSchema },
-  "status": { ...itemSchema }
+  "status": { ...itemSchema },
+  "tag": { ...itemSchema },
+}
+
+const listMap = {
+  filterTask: "task",
+  filterTag: "tag",
 }
 
 function getPropertyNames(itemType) {
   return Object.keys(schemaMap[itemType])
 }
 
+function getListType(listName) {
+  return listMap[listName]
+}
+
 module.exports = {
-  getPropertyNames
+  getPropertyNames,
+  getListType,
 }
 
 /** END TMP */
