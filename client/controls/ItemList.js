@@ -4,22 +4,22 @@ const {
   List,
   ListItem,
 } = require("@material-ui/core")
-const { focusAction } = require("../../domain/todo/redux/action")
 const { ActionLink } = require("./ActionLink")
 
-function ItemTable({ type, items }) {
+function ItemList({ type, items, invocationById }) {
   return <List>
     {items.map(item =>
       <ListItem key={item.id}>
-        <ActionLink invocation={[focusAction, type, item.id]} >{item.label}</ActionLink>
+        <ActionLink invocation={[...invocationById, item.id]} >{item.label || item.id}</ActionLink>
       </ListItem>)}
   </List>
 }
-ItemTable.propTypes = {
+ItemList.propTypes = {
   type: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(PropTypes.object).isRequired
+  items: PropTypes.arrayOf(PropTypes.object).isRequired,
+  invocationById: PropTypes.array.isRequired
 }
 
 module.exports = {
-  ItemTable
+  ItemList
 }
