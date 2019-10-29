@@ -1,20 +1,17 @@
 const React = require("react")
 const ReactDom = require("react-dom")
-const { createStore } = require("redux")
-const { Provider: ReduxProvider } = require("react-redux")
-const { createBackend } = require("./backend")
-
-const { launchRootSaga } = require("../domain/todo/redux/saga")
-
+const { Provider } = require("react-redux")
 const {
   Grid,
   Paper,
 } = require("@material-ui/core")
-const { makeStyles } = require("@material-ui/core/styles")
+
+const { launchRootSaga } = require("../domain/todo/redux/saga")
+const { filterTasksAction, setEditedAction } = require("../domain/todo/redux/action")
 
 const { SimpleMenu } = require("./controls/SimpleMenu")
-const { Form } = require("./controls/Form")
-const { FilteredTaskTable } = require("./controls/FilteredTaskTable")
+const { EditedItemForm } = require("./controls/EditedItemForm")
+const { NamedItemList } = require("./controls/NamedItemList")
 
 const {
   reduxStore,
@@ -23,54 +20,34 @@ const {
   rootTask
 } = launchRootSaga()
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  },
-  "MuiLink-underlineHover": {
-    cursor: "pointer",
-    backgroundColor: "red"
-  }
-}))
-
-let item = null
-let type = "task"
-let save = backend.saveItem
-
 function Dash() {
-
-  const classes = useStyles()
-
-  return <ReduxProvider store={reduxStore}>
-    <div className={classes.root}>
+  return <Provider store={reduxStore}>
+    <div>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <SimpleMenu></SimpleMenu>
         </Grid>
         <Grid item xs={4}>
-          <Paper className={classes.paper}>
-            <Form item={item} type={type} save={save} />
+          <Paper >
+            <EditedItemForm />
           </Paper>
         </Grid>
         <Grid item xs={4}>
-          <Paper className={classes.paper}>
-            <FilteredTaskTable />
+          <Paper >
+            <NamedItemList listName="filterTask" invocationById={[setEditedAction, "task"]} />
           </Paper>
         </Grid>
         <Grid item xs={4}>
-          <Paper className={classes.paper}>xs=3</Paper>
+          <Paper >
+            <NamedItemList listName="filterTag" invocationById={[filterTasksAction]} />
+          </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Paper className={classes.paper}>xs=12</Paper>
+          <Paper>xs=12</Paper>
         </Grid>
       </Grid>
     </div>
-  </ReduxProvider>
+  </Provider>
 }
 
 

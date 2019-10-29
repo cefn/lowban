@@ -1,5 +1,5 @@
 const path = require("path")
-const { mode } = require("./defaults")
+const { mode } = require("./server/defaults")
 
 module.exports = {
   mode: mode,
@@ -9,7 +9,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, "/static/build/"),
-    filename: "frontent.js",
+    filename: "frontend.js",
     publicPath: "/static/build/"
   }
   ,
