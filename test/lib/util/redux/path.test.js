@@ -23,23 +23,23 @@ describe("Check behaviour of setPathsAction", () => {
   })
 
   test("Can set a shallow path to a value", () => {
-    expect(reduxStore.getState().focusId).toBeNull()
-    const focusId = "id-in-focus"
+    expect(reduxStore.getState().taskFilterString).toEqual("")
+    const newValue = "id-in-focus"
     reduxStore.dispatch(setPathsAction({
-      "focusId": focusId
+      "taskFilterString": newValue
     }))
-    expect(reduxStore.getState().focusId).toEqual(focusId)
+    expect(reduxStore.getState().taskFilterString).toEqual(newValue)
   })
 
   test("Can set multiple shallow paths to values", () => {
-    expect(reduxStore.getState().focusId).toBeNull()
-    expect(reduxStore.getState().focusType).toBeNull()
+    expect(reduxStore.getState().taskFilterString).toEqual("")
+    expect(reduxStore.getState().tagFilterString).toEqual("")
     reduxStore.dispatch(setPathsAction({
-      "focusId": "id-in-focus",
-      "focusType": "type-in-focus"
+      "taskFilterString": "filter-tasks",
+      "tagFilterString": "filter-tags"
     }))
-    expect(reduxStore.getState().focusId).toEqual("id-in-focus")
-    expect(reduxStore.getState().focusType).toEqual("type-in-focus")
+    expect(reduxStore.getState().taskFilterString).toEqual("filter-tasks")
+    expect(reduxStore.getState().tagFilterString).toEqual("filter-tags")
   })
 
   test("Can set deep array paths", () => {
