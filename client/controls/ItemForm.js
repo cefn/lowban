@@ -4,9 +4,10 @@ const {
   List,
   ListItem,
   TextField,
+  TextareaAutosize,
 } = require("@material-ui/core")
 
-function ItemForm({ item, fieldNames, dirty }) {
+function ItemForm({ item, fieldNames, areaFieldNames, dirty }) {
 
   for (const name of fieldNames) {
     item[name] = item[name] || ""
@@ -20,22 +21,26 @@ function ItemForm({ item, fieldNames, dirty }) {
     }
   }
 
-  return <React.Fragment>
-    <List>
-      {fieldNames.map(
-        (fieldName) => <ListItem key={fieldName} >
-          <TextField
-            label={fieldName}
-            value={item[fieldName]}
-            onChange={createFieldChangeHandler(fieldName)}
-          />
-        </ListItem>)}
-    </List>
-  </React.Fragment>
+  return <List>
+    {fieldNames.map((fieldName) => {
+      let props = {
+        label: fieldName,
+        value: item[fieldName],
+        onChange: createFieldChangeHandler(fieldName)
+      }
+      if (areaFieldNames && areaFieldNames.includes(fieldName)) { //use a text area
+        return <ListItem key={fieldName} > <TextareaAutosize {...props} rows={10} /> </ListItem>
+      }
+      else { //use a normal field
+        return <ListItem key={fieldName} > <TextField {...props} /> </ListItem>
+      }
+    })}
+  </List>
 }
 ItemForm.propTypes = {
   item: PropTypes.object,
   fieldNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+  areaFieldNames: PropTypes.arrayOf(PropTypes.string),
   dirty: PropTypes.func.isRequired
 }
 
