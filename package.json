@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-watch --exclude db.json app.js",
-    "build": "webpack",
-    "watch": "webpack --watch",
+    "start": "npm-run-all --parallel watch-client watch-server",
+    "watch-server": "babel-watch --exclude db.json app.js",
+    "build-client": "webpack",
+    "watch-client": "webpack --watch",
     "test": "jest --silent",
     "coverage": "jest --collect-coverage"
   },
@@ -112,6 +113,7 @@
     "lodash": "^4.17.15",
     "lodash-id": "^0.14.0",
     "lowdb": "^1.0.0",
+    "npm-run-all": "^4.1.5",
     "react": "^16.9.0",
     "react-bootstrap": "^1.0.0-beta.12",
     "react-dom": "^16.9.0",
