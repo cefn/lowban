@@ -129,6 +129,7 @@ module.exports = {
   ensureEditedSchemaLoaded,
   ensureEditedRowLoaded,
   ensureFilterTaskListLoaded,
+  ensureFilterTagListLoaded,
   rootSaga,
   launchRootSaga
 }
