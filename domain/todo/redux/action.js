@@ -9,6 +9,8 @@ function emptyAction(typeName) {
   return { type: typeName }
 }
 
+//TODO reintroduce payload in save action now I know saga actionChannels can have 
+//a function pattern not just type: string match (e.g. can inspect payload for when saved id changes)
 function saveItemAction() { return emptyAction(SAVE_EDITED_ITEM) }
 
 /** STORE MANIPULATION ACTIONS */

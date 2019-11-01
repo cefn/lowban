@@ -66,6 +66,8 @@ function* delayedSaveSaga(type, item, delayMs) {
   return savedItem
 }
 
+//TODO use debounce directly but with function pattern to ensure last save of a
+//given item isn't lost
 function* ensureDebouncedSavesSaga() {
   //map for new saveTasks to cancel pending saveTasks if same item id (debounce)
   const saveTasks = {}
