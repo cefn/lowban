@@ -14,14 +14,14 @@ function runSagaExample(chainFn, ...sagaInvocation) {
 
 describe("monitorSelector() returns when store's selected state value, actions meet criteria", () => {
 
-  const defaultMonitorInvocation = [
-    monitorSelector, //saga
-    state => state.hello, //selector passed to saga
-    value => value === "world" //filter passed to saga
-  ]
-
-  function runMonitorExample(chainFn) {
-    return runSagaExample(chainFn, ...defaultMonitorInvocation)
+  function runMonitorExample(chainFn, patternOrChannel = "*") {
+    const monitorInvocation = [
+      monitorSelector, //saga
+      state => state.hello, //selector passed to monitorSelector
+      value => value === "world", //filter passed to monitorSelector,
+      patternOrChannel,
+    ]
+    return runSagaExample(chainFn, ...monitorInvocation)
   }
 
   it("monitorSelector returns immediately if filter accepts value", async () => {
@@ -60,11 +60,10 @@ describe("monitorSelector() returns when store's selected state value, actions m
 
   it("monitorSelector blocks after non-matching action taken even if filter accepts value", async () => {
     const takePattern = "NON-EXISTENT-ACTION-TYPE"
-    const result = await runSagaExample(
+    const result = await runMonitorExample(
       scenario => scenario
         .withState({ hello: "mars" })
         .dispatch(setPathsAction({ hello: "world" })),
-      ...defaultMonitorInvocation,
       takePattern
     )
     const { effects, returnValue } = result
