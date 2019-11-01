@@ -4,7 +4,7 @@ const {
   List,
   ListItem,
 } = require("@material-ui/core")
-const { ActionLink } = require("./ActionLink")
+const { ActionLink } = require("./Actionable")
 
 function ItemList({ type, items, invocationById }) {
   return <List>

@@ -12,6 +12,7 @@ const { filterTasksAction, setEditedAction } = require("../domain/todo/redux/act
 const { SimpleMenu } = require("./controls/SimpleMenu")
 const { EditedItemForm } = require("./controls/EditedItemForm")
 const { NamedItemList } = require("./controls/NamedItemList")
+const { ActionButton } = require("./controls/Actionable")
 
 const {
   reduxStore,
@@ -24,7 +25,10 @@ function Dash() {
   return <Provider store={reduxStore}>
     <div>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+        <Grid item xs={8}>
+          <ActionButton invocation={[setEditedAction, "task", undefined]} >New Task</ActionButton>
+        </Grid>
+        <Grid item xs={4}>
           <SimpleMenu></SimpleMenu>
         </Grid>
         <Grid item xs={4}>
