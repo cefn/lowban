@@ -35,10 +35,15 @@ function* ensureEditedSchemaLoaded() {
 
 function* ensureEditedRowLoaded() {
   yield* selectorChangeSaga(state => state.editor, function* ({ type, id, item }) {
-    if (type && id) {
-      if ((!item) || (item.id !== id)) {
-        const loadedItem = yield* loadRowSaga(type, id)
-        yield put(setPathsAction({ "editor.item": loadedItem }))
+    if (type) {
+      if (id) { //loading a concrete row
+        if ((!item) || (item.id !== id)) {
+          const loadedItem = yield* loadRowSaga(type, id)
+          yield put(setPathsAction({ "editor.item": loadedItem }))
+        }
+      }
+      else { //loading an empty row
+        yield put(setPathsAction({ "editor.item": {} }))
       }
     }
   })
