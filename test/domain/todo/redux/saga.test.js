@@ -4,13 +4,15 @@ const { setPathsAction, setPathsReducer } = require("../../../../lib/util/redux/
 
 
 const {
-  loadRowSaga,
   loadSchemaSaga,
+  loadRowSaga,
   loadListSaga,
-  ensureFocusSchemaLoaded,
-  ensureFocusRowLoaded,
+  ensureEditedSchemaLoaded,
+  ensureEditedRowLoaded,
   ensureFilterTaskListLoaded,
+  ensureFilterTagListLoaded,
   rootSaga,
+  launchRootSaga
 } = require("../../../../domain/todo/redux/saga")
 
 const noop = () => { }
@@ -66,14 +68,14 @@ describe("ensureFocusRowLoaded() monitors focus, loads row having focusType, foc
     const testRow = { id: "abc", label: "Description" } //fake schema object (tested by identity)
 
     //configure saga test
-    const result = await expectSaga(ensureFocusRowLoaded)
+    const result = await expectSaga(ensureEditedRowLoaded)
       .withReducer(setPathsReducer)
       .provide([
         [getContext("backend"), backend],
         [call(backend.loadItem, testType, testId), testRow], //mock the retrieval 
       ])
-      .dispatch(setPathsAction({ focusType: testType, focusId: testId })) //emulate setting the focusType
-      .hasFinalState({ focusType: testType, focusId: testId, rows: { [testType]: { [testId]: testRow } } })
+      .dispatch(setPathsAction({ editor: { type: testType, id: testId } })) //emulate setting the focusType
+      .hasFinalState({ editor: { type: testType, id: testId, item: testRow }, rows: { [testType]: { [testId]: testRow } } })
       .silentRun(10)
   })
 
@@ -86,16 +88,16 @@ describe("ensureSchemaLoaded() monitors focusType, loads schema for focusType", 
   it("ensureSchemaLoaded() loads schema when type focused", async () => {
     const testType = "type-x"
     const schemaMock = {} //fake schema object (tested by identity)
-
+    const initialState = { editor: { type: undefined } }
     //configure saga test
-    const result = await expectSaga(ensureFocusSchemaLoaded)
-      .withReducer(setPathsReducer)
+    const result = await expectSaga(ensureEditedSchemaLoaded)
+      .withReducer(setPathsReducer, initialState)
       .provide([
         [getContext("backend"), backend],
         [call(backend.loadSchema, testType), schemaMock], //mock the retrieval 
       ])
-      .dispatch(setPathsAction({ focusType: testType })) //emulate setting the focusType
-      .hasFinalState({ focusType: testType, schemas: { [testType]: schemaMock } })
+      .dispatch(setPathsAction({ editor: { type: testType } })) //emulate setting the focusType
+      .hasFinalState({ editor: { type: testType, }, schemas: { [testType]: schemaMock } })
       .silentRun(10)
   })
 

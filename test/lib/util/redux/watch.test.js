@@ -6,22 +6,22 @@ const {
   selectorChangeSaga,
 } = require("../../../../lib/util/redux/watch")
 
-function runSagaExample(chainFn, ...sagaInvocation) {
+function runSagaExample(scenarioDecorator, ...sagaInvocation) {
   const scenario = expectSaga(...sagaInvocation).withReducer(setPathsReducer)
-  const assertionChain = chainFn(scenario)
+  const assertionChain = scenarioDecorator(scenario)
   return assertionChain.silentRun(10) //10ms timeout, don't warn to console when saga times out
 }
 
 describe("monitorSelector() returns when store's selected state value, actions meet criteria", () => {
 
-  const defaultMonitorInvocation = [
-    monitorSelector, //saga
-    state => state.hello, //selector passed to saga
-    value => value === "world" //filter passed to saga
-  ]
-
-  function runMonitorExample(chainFn) {
-    return runSagaExample(chainFn, ...defaultMonitorInvocation)
+  function runMonitorExample(scenarioDecorator, patternOrChannel = "*") {
+    const monitorInvocation = [
+      monitorSelector, //saga
+      state => state.hello, //selector passed to monitorSelector
+      value => value === "world", //filter passed to monitorSelector,
+      patternOrChannel,
+    ]
+    return runSagaExample(scenarioDecorator, ...monitorInvocation)
   }
 
   it("monitorSelector returns immediately if filter accepts value", async () => {
@@ -60,11 +60,10 @@ describe("monitorSelector() returns when store's selected state value, actions m
 
   it("monitorSelector blocks after non-matching action taken even if filter accepts value", async () => {
     const takePattern = "NON-EXISTENT-ACTION-TYPE"
-    const result = await runSagaExample(
+    const result = await runMonitorExample(
       scenario => scenario
         .withState({ hello: "mars" })
         .dispatch(setPathsAction({ hello: "world" })),
-      ...defaultMonitorInvocation,
       takePattern
     )
     const { effects, returnValue } = result
@@ -88,25 +87,12 @@ describe("selectorChangeSaga() triggers callback when new value for selector not
     return saga
   }
 
-  async function spyOnSelectorChange(chainFn) {
+  async function spyOnSelectorChange(scenarioDecorator) {
     const spySaga = createSpySaga()
     const selectorInvocation = [selectorChangeSaga, state => state.hello, spySaga]
-    const result = await runSagaExample(chainFn, ...selectorInvocation)
+    const result = await runSagaExample(scenarioDecorator, ...selectorInvocation)
     return spySaga
   }
-
-  it("Runs saga once if value was initially assigned", async () => {
-    //TODO turn into spyOnSelectorChange signature, to remove duplication
-    const spySaga = createSpySaga()
-    const selectorInvocation = [selectorChangeSaga, state => state.hello, spySaga]
-    const result = await runSagaExample(
-      scenario => scenario
-        .withState({ hello: "world" }),
-      ...selectorInvocation
-    )
-    expect(spySaga.invocations[0]).toStrictEqual(["world", undefined])
-    expect(spySaga.invocations.length).toBe(1)
-  })
 
   it("Doesn't run saga if selected value not initially assigned", async () => {
     const spySaga = await spyOnSelectorChange(
@@ -116,7 +102,16 @@ describe("selectorChangeSaga() triggers callback when new value for selector not
     expect(spySaga.invocations.length).toBe(0)
   })
 
-  it("Runs saga once if value is assigned once", async () => {
+  it("Runs saga once if value was initially assigned", async () => {
+    const spySaga = await spyOnSelectorChange(
+      scenario => scenario
+        .withState({ hello: "world" })
+    )
+    expect(spySaga.invocations[0]).toStrictEqual(["world", undefined])
+    expect(spySaga.invocations.length).toBe(1)
+  })
+
+  it("Runs saga once if value was undefined, then is assigned once", async () => {
     const spySaga = await spyOnSelectorChange(
       scenario => scenario
         .withState({ hello: undefined })
@@ -127,7 +122,7 @@ describe("selectorChangeSaga() triggers callback when new value for selector not
     expect(spySaga.invocations.length).toBe(1)
   })
 
-  it("Runs saga twice if value becomes assigned then undefined", async () => {
+  it("Runs saga twice if value is assigned then made undefined", async () => {
     const spySaga = createSpySaga()
     const selectorInvocation = [selectorChangeSaga, state => state.hello, spySaga]
     const result = await runSagaExample(
