@@ -3,39 +3,22 @@ import { fade, makeStyles } from "@material-ui/core/styles"
 
 const {
   Grid,
-  Paper,
   AppBar,
   Toolbar,
   IconButton,
   Menu,
   MenuItem,
-  Typography,
   InputBase
 } = require("@material-ui/core")
 
-import MoreIcon from "@material-ui/icons/MoreVert"
 import SearchIcon from "@material-ui/icons/Search"
 import AccountCircle from "@material-ui/icons/AccountCircle"
-
 
 const { ActionButton } = require("./../controls/Actionable")
 
 const { setEditedAction } = require("../../domain/todo/redux/action")
 
-
 const useStyles = makeStyles(theme => ({
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
-    },
-  },
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
@@ -75,12 +58,6 @@ const useStyles = makeStyles(theme => ({
     display: "none",
     [theme.breakpoints.up("md")]: {
       display: "flex",
-    },
-  },
-  sectionMobile: {
-    display: "flex",
-    [theme.breakpoints.up("md")]: {
-      display: "none",
     },
   },
 }))
@@ -177,17 +154,6 @@ function SearchMenu() {
               color="inherit"
             >
               <AccountCircle />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
             </IconButton>
           </div>
         </Toolbar>
