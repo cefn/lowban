@@ -28,5 +28,9 @@ module.exports = {
   },
   resolve: {
     modules: [__dirname, "node_modules"],
+    alias: {
+      "react-dom$": "react-dom/profiling",
+      "scheduler/tracing": "scheduler/tracing-profiling",
+    }
   }
 }
