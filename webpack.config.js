@@ -28,7 +28,7 @@ module.exports = {
   },
   resolve: {
     modules: [__dirname, "node_modules"],
-    alias: {
+    alias: { //TODO put react profiling and tracing options in debug or development configuration
       "react-dom$": "react-dom/profiling",
       "scheduler/tracing": "scheduler/tracing-profiling",
     }
