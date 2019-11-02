@@ -3,15 +3,17 @@
  * TODO should be used to construct graphql schema
  * TODO should be hoisted into config */
 const itemSchema = {
-  id: "string",
   label: "string",
   note: "string",
+  id: "string",
 }
 
 const schemaMap = {
-  "task": {
-    ...itemSchema,
-    tagIds: "array"
+  "task": { //force ordering by not using spread of itemSchema
+    label: "string",
+    note: "string",
+    tagIds: "array",
+    id: "string",
   },
   "category": { ...itemSchema },
   "priority": { ...itemSchema },
@@ -27,8 +29,13 @@ const listMap = {
   filterTag: "tag",
 }
 
+const propertyNames = {}
+for (const type of Object.keys(schemaMap)) {
+  propertyNames[type] = Object.keys(schemaMap[type])
+}
+
 function getPropertyNames(itemType) {
-  return Object.keys(schemaMap[itemType])
+  return propertyNames[itemType]
 }
 
 function getListType(listName) {
