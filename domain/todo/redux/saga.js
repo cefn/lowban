@@ -82,7 +82,7 @@ function* ensureDebouncedSavesSaga() {
   yield* selectorChangeSaga(state => state.editor, function* (editor) {
     const { type, id, item } = editor
     if (item && (Object.values(item).length > 0)) { //item is non-empty
-      if (id) { //it's a known item
+      if (item.id) { //it's a known item
         const jobName = type + id
         //unschedule pending saves
         if (forkedSaves[jobName]) {
