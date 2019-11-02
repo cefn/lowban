@@ -1,5 +1,6 @@
-import React from "react"
-import { fade, makeStyles } from "@material-ui/core/styles"
+const React = require("react")
+const { connect } = require("react-redux")
+const { makeStyles } = require("@material-ui/core/styles")
 
 const {
   Grid,
@@ -8,52 +9,17 @@ const {
   IconButton,
   Menu,
   MenuItem,
-  InputBase
 } = require("@material-ui/core")
 
-import SearchIcon from "@material-ui/icons/Search"
-import AccountCircle from "@material-ui/icons/AccountCircle"
+const AccountCircle = require("@material-ui/icons/AccountCircle").default
 
-const { ActionButton } = require("./../controls/Actionable")
+const { ActionButton } = require("./Actionable")
+const { SearchBox } = require("./SearchBox")
 
+const { setPathsAction } = require("../../lib/util/redux/path")
 const { setEditedAction } = require("../../domain/todo/redux/action")
 
 const useStyles = makeStyles(theme => ({
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    width: theme.spacing(7),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 7),
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: 200,
-    },
-  },
   sectionDesktop: {
     display: "none",
     [theme.breakpoints.up("md")]: {
@@ -62,29 +28,19 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-function SearchMenu() {
+function Layout({ dispatch, tagFilterString, taskFilterString }) {
+
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState(null)
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null)
 
   const isMenuOpen = Boolean(anchorEl)
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
 
   const handleProfileMenuOpen = event => {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null)
-  }
-
   const handleMenuClose = () => {
     setAnchorEl(null)
-    handleMobileMenuClose()
-  }
-
-  const handleMobileMenuOpen = event => {
-    setMobileMoreAnchorEl(event.currentTarget)
   }
 
   const menuId = "primary-search-account-menu"
@@ -103,7 +59,6 @@ function SearchMenu() {
     </Menu>
   )
 
-  const mobileMenuId = "primary-search-account-menu-mobile"
   return (
     <div className={classes.grow}>
       <AppBar position="static">
@@ -113,34 +68,10 @@ function SearchMenu() {
               <ActionButton color="inherit" invocation={[setEditedAction, "task", undefined]} > New Task</ActionButton>
             </Grid>
             <Grid item xs={4}>
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-                <InputBase
-                  placeholder="Search tasks…"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ "aria-label": "search" }}
-                />
-              </div>
+              <SearchBox placeholder="Tasks..." value={taskFilterString} onChange={event => dispatch(setPathsAction({ "taskFilterString": event.target.value }))} />
             </Grid>
             <Grid item xs={4}>
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-                <InputBase
-                  placeholder="Search tags…"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ "aria-label": "search" }}
-                />
-              </div>
+              <SearchBox placeholder="Tags..." value={tagFilterString} onChange={event => dispatch(setPathsAction({ "tagFilterString": event.target.value }))} />
             </Grid>
           </Grid>
           <div className={classes.grow} />
@@ -163,6 +94,12 @@ function SearchMenu() {
   )
 }
 
-export {
+function SearchMenu() {
+  const bindDispatch = connect(({ taskFilterString, tagFilterString }) => ({ taskFilterString, tagFilterString }))
+  const BoundLayout = bindDispatch(Layout)
+  return <BoundLayout />
+}
+
+module.exports = {
   SearchMenu
 }
