@@ -46,7 +46,8 @@ function createBackend(host) {
       }
     } `
     const response = await getRemoteResponse(graphqlEndpoint, query)
-    return response.data[resolverName]
+    const item = response.data[resolverName]
+    return editableData(item)
   }
 
   async function loadList(listName, listArgs, listFields) {
