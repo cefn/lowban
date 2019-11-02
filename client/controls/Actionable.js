@@ -6,11 +6,9 @@ const { Link, Button } = require("@material-ui/core")
 function makeActionable(Component) {
   const bindDispatch = connect() // bind redux dispatch only
   const Actionable = bindDispatch(props => {
-    const { dispatch, invocation } = props
+    const { dispatch, invocation, ...descendantProps } = props
     const [action, ...args] = invocation
-    return <Component {...props} onClick={() => {
-      dispatch(action(...args))
-    }} />
+    return <Component {...descendantProps} onClick={() => dispatch(action(...args))} />
   })
   Actionable.propTypes = {
     invocation: PropTypes.array.isRequired,
