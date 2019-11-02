@@ -6,6 +6,11 @@ function editableData(data) {
   if (data.tagIds) {
     data.tagIds = data.tagIds.join(" ")
   }
+  for (const [key, val] of Object.entries(data)) {
+    if (val === null || val === undefined) {
+      delete data[key]
+    }
+  }
   return data
 }
 
