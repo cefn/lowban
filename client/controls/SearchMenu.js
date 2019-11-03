@@ -13,7 +13,7 @@ const {
 
 const AccountCircle = require("@material-ui/icons/AccountCircle").default
 
-const { ActionButton } = require("./Actionable")
+const { DispatchButton } = require("./ActionDispatch")
 const { SearchBox } = require("./SearchBox")
 
 const { setPathsAction } = require("../../lib/util/redux/path")
@@ -65,7 +65,7 @@ function Layout({ dispatch, tagFilterString, taskFilterString }) {
         <Toolbar>
           <Grid container spacing={3}>
             <Grid item xs={4}>
-              <ActionButton color="inherit" invocation={[setEditedAction, "task", undefined]} > New Task</ActionButton>
+              <DispatchButton color="inherit" invocation={[setEditedAction, "task", undefined]} > New Task</DispatchButton>
             </Grid>
             <Grid item xs={4}>
               <SearchBox placeholder="Tasks..." value={taskFilterString} onChange={event => dispatch(setPathsAction({ "taskFilterString": event.target.value }))} />

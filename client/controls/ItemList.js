@@ -6,7 +6,7 @@ const {
 } = require("@material-ui/core")
 
 
-const { ActionLink } = require("./Actionable")
+const { DispatchLink } = require("./ActionDispatch")
 
 
 function ItemList({ dispatch, type, items, invocationById, styleByItem = () => ({}), ...rest }) {
@@ -14,7 +14,7 @@ function ItemList({ dispatch, type, items, invocationById, styleByItem = () => (
   return <List {...rest}>
     {items.map(item =>
       <ListItem key={item.id} style={styleByItem(item)} >
-        <ActionLink color="inherit" invocation={[...invocationById, item.id]} >{item.label || item.id}</ActionLink>
+        <DispatchLink color="inherit" invocation={[...invocationById, item.id]} >{item.label || item.id}</DispatchLink>
       </ListItem>
     )}
   </List>
