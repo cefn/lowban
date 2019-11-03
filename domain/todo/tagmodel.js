@@ -45,11 +45,11 @@ const tagTypes = Object.values(tagTypeByPrefix)
 
 let priorityOrder = 0
 const priorityLookup = {
-  "!urgent": { color: "#FF0000", order: priorityOrder++ },
-  "!soon": { color: "#FFFF00", order: priorityOrder++ },
-  null: { color: "#0000FF", order: priorityOrder++ },
-  "!backlog": { color: "#00FF00", order: priorityOrder++ },
-  "!wishlist": { color: "#9400D3", order: priorityOrder++ },
+  "!urgent": { color: "#d50000", order: priorityOrder++ },
+  "!soon": { color: "#673ab7", order: priorityOrder++ },
+  null: { color: "#3f51b5", order: priorityOrder++ },
+  "!backlog": { color: "#4caf50", order: priorityOrder++ },
+  "!wishlist": { color: "#cddc39", order: priorityOrder++ },
 }
 const priorityTypes = Object.keys(priorityLookup)
 
@@ -290,14 +290,14 @@ function compareTaskPriority(taskA, taskB) {
   return priorityLookup[priorityA].order - priorityLookup[priorityB].order
 }
 
-const compareTaskOrder = jointComparatorFactory([
+const compareTaskRelevant = jointComparatorFactory([
   compareTaskPriority,
   compareTaskActionable,
 ])
 
-function orderNextTasks(series) {
+function relevantNextTasks(series) {
   series = [...series]
-  series.sort(compareTaskOrder)
+  series.sort(compareTaskRelevant)
   return series
 }
 
@@ -329,6 +329,7 @@ module.exports = {
   storedDataTypes,
   listedDataTypes,
   priorityTypes,
+  priorityLookup,
   periodTypes,
   periodLookupMs,
   iterateTaskTagIds,
@@ -338,8 +339,8 @@ module.exports = {
   getTaskShortestPeriod,
   compareTaskActionable,
   compareTaskPriority,
-  compareTaskOrder,
-  orderNextTasks,
+  compareTaskRelevant,
+  relevantNextTasks,
   getFirstItem,
   getTagContent,
   getTaskPriority,
