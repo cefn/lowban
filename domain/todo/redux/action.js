@@ -1,14 +1,21 @@
 const { setPathsAction } = require("../../../lib/util/redux/path")
 
-const DELETE_ITEM = "delete-item"
+const REFRESH_LOCAL = "refresh-local"
+const REMOVE_ITEM = "remove-item"
 const SNOOZE_TASK = "snooze-task"
 const FULFIL_TASK = "fulfil-task"
 
 /** SAGA-HANDLED ACTIONS */
 
-function deleteItemAction(type, id) {
+function refreshLocalAction() {
   return {
-    type: DELETE_ITEM,
+    type: REFRESH_LOCAL
+  }
+}
+
+function removeItemAction(type, id) {
+  return {
+    type: REMOVE_ITEM,
     payload: {
       type,
       id
@@ -43,7 +50,11 @@ function saveItemAction(item) {
   })
 }
 
-function setEditedAction(type, id) {
+function newRecordAction(type) {
+  return editRecordAction(type, undefined)
+}
+
+function editRecordAction(type, id) {
   return setPathsAction({
     "editor.type": type,
     "editor.id": id,
@@ -63,11 +74,17 @@ function filterTasksAction(taskFilterString) {
 }
 
 module.exports = {
-  deleteItemAction,
+  REFRESH_LOCAL,
+  REMOVE_ITEM,
+  SNOOZE_TASK,
+  FULFIL_TASK,
+  refreshLocalAction,
+  removeItemAction,
   snoozeTaskAction,
   fulfilTaskAction,
   saveItemAction,
-  setEditedAction,
+  newRecordAction,
+  editRecordAction,
   filterTagsAction,
   filterTasksAction,
 }
