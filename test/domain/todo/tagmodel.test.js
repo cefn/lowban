@@ -22,8 +22,8 @@ const {
   getTaskShortestPeriod,
   compareTaskActionable,
   compareTaskPriority,
-  compareTaskOrder,
-  orderNextTasks,
+  compareTaskRelevant,
+  relevantNextTasks,
   getFirstItem,
   getTagContent,
   getTaskPriority,
@@ -402,7 +402,7 @@ test("'Next' Tasks are jointly ordered by priority then age", () => {
     action: [{ type: "fulfil", instant: instantB }]
   }
   const originalTaskList = [wishlistTaskA, wishlistTaskB, urgentTaskA, urgentTaskB]
-  const sortedTasks = orderNextTasks(originalTaskList)
+  const sortedTasks = relevantNextTasks(originalTaskList)
   expect(sortedTasks).toEqual([urgentTaskB, urgentTaskA, wishlistTaskB, wishlistTaskA]) //most priority first, then most late
 })
 
