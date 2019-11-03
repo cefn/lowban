@@ -1,6 +1,13 @@
 /** TODO add contexts, statuses, priorities */
+const sortBy = require("lodash/sortBy")
 const { makeExecutableSchema } = require("graphql-tools")
-const { storedDataTypes, getTagType } = require("../tagmodel")
+const {
+  storedDataTypes,
+  getTagType,
+  compareTaskRelevant,
+  comparePriorityOrder,
+  compareActionableOrder
+} = require("../tagmodel")
 const { initialCapital } = require("../../../lib/util/javascript")
 
 //TODO remove use of makeExecutableSchema - compiler too buggy
@@ -62,8 +69,10 @@ const typeDefs = `
     category(id:String!): Category
     schedule(id:String!): Schedule
     deadline(id:String!): Deadline
-    filterTaskList(filter:String!):[Task!]
-    filterTagList(filter:String!):[Tag!]
+    filterTags(filter:String!):[Tag!]
+    filterRelevantTasks(filter:String!):[Task!]
+    filterPriorityTasks(filter:String!):[Task!]
+    filterActionableTasks(filter:String!):[Task!]
   }
   type Mutation {
     taskMerge (input:TaskInput!): Task
@@ -151,8 +160,10 @@ function resolverFactory(tagStore) {
   const queryResolvers = {
     ids: (_parent, args) => tagStore.iterateIdsByType(args.type), //lists all ids of a type
     tagList: tagStore.iterateAllTags, //aggregates multiple stored tag types
-    filterTagList: (_parent, args) => tagStore.iterateFilteredTags(args.filter),
-    filterTaskList: (_parent, args) => tagStore.iterateFilteredTasks(args.filter)
+    filterTags: (_parent, args) => sortBy([...tagStore.iterateFilteredTags(args.filter)], tag => tag.id),
+    filterRelevantTasks: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].sort(compareTaskRelevant),
+    filterPriorityTasks: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].sort(comparePriorityOrder),
+    filterActionableTasks: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].sort(compareActionableOrder)
   }
   //...plus query resolvers for each stored type
   for (let storedType of storedDataTypes) {
@@ -166,6 +177,7 @@ function resolverFactory(tagStore) {
       taskMerge: (_parent, args) => {
         return tagStore.mergeItem("task", args.input)
       },
+      //TODO write form logic to use this mutation
       tagMerge: (_parent, args) => {
         return tagStore.mergeItem("tag", args.input)
       },
