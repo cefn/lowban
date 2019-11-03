@@ -138,6 +138,7 @@ class TagStore extends LowStore {
   }
 
   addTaskActionById(taskId, actionType, actionMap) {
+    let result
     this.changeTable("task", table =>
       table.getById(taskId)
         .thru(task => {
@@ -147,8 +148,15 @@ class TagStore extends LowStore {
             instant: getNow(),
             ...actionMap
           })
+          result = task
         })
     )
+    if (result) {
+      return result
+    }
+    else {
+      throw `Couldn't insert ${actionType} in ${taskId} with ${actionMap}`
+    }
   }
 }
 
