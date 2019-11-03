@@ -57,7 +57,7 @@ function createBackend(host) {
       Object.entries(listArgs).map(
         ([name, value]) => `${name}:${JSON.stringify(value)}`
       ).join(",")
-    })`
+      })`
     const resolverFields = listFields.join(" ")
     const query = `{ ${resolverName}${resolverArgs} { ${resolverFields} } }`
     const response = await getRemoteResponse(graphqlEndpoint, query)
@@ -80,14 +80,41 @@ function createBackend(host) {
     return editableData(received) //make form-compliant
   }
 
+  async function removeItem(type, id) {
+    const resolverName = "itemRemove"
+    let query = `mutation {
+      ${resolverName}(type:${JSON.stringify(type)},id:${JSON.stringify(id)})
+    }`
+    const response = await getRemoteResponse(graphqlEndpoint, query)
+    const removed = response.data[resolverName]
+    return removed
+  }
+
   //TODO add implicit 'create' action when id is assigned by database
 
   async function snoozeTask(id) {
-
+    const resolverName = "taskSnooze"
+    let query = `mutation {
+      ${resolverName}(id:${JSON.stringify(id)}){
+        id
+      }
+    }`
+    const response = await getRemoteResponse(graphqlEndpoint, query)
+    const received = response.data[resolverName]
+    return received.id === id
   }
 
   async function fulfilTask(id) {
-
+    //TODO eliminate boilerplate with snoozeTask and others
+    const resolverName = "taskFulfil"
+    let query = `mutation {
+      ${resolverName}(id:${JSON.stringify(id)}){
+        id
+      }
+    }`
+    const response = await getRemoteResponse(graphqlEndpoint, query)
+    const received = response.data[resolverName]
+    return received.id === id
   }
 
   return {
@@ -95,7 +122,10 @@ function createBackend(host) {
     loadIds,
     loadItem,
     loadList,
-    saveItem
+    saveItem,
+    removeItem,
+    snoozeTask,
+    fulfilTask,
   }
 
 }
