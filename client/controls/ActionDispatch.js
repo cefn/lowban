@@ -3,24 +3,24 @@ const PropTypes = require("prop-types")
 const { connect } = require("react-redux")
 const { Link, Button } = require("@material-ui/core")
 
-function makeActionable(Component) {
+function dispatchOnClick(Component) {
   const bindDispatch = connect() // bind redux dispatch only
-  const Actionable = bindDispatch(props => {
+  const DispatchComponent = bindDispatch(props => {
     const { dispatch, invocation, ...descendantProps } = props
     const [action, ...args] = invocation
     return <Component {...descendantProps} onClick={() => dispatch(action(...args))} />
   })
-  Actionable.propTypes = {
+  DispatchComponent.propTypes = {
     invocation: PropTypes.array.isRequired,
     children: PropTypes.node.isRequired
   }
-  return Actionable
+  return DispatchComponent
 }
 
-const ActionLink = makeActionable(Link)
-const ActionButton = makeActionable(Button)
+const DispatchLink = dispatchOnClick(Link)
+const DispatchButton = dispatchOnClick(Button)
 
 module.exports = {
-  ActionLink,
-  ActionButton
+  DispatchLink,
+  DispatchButton
 }
