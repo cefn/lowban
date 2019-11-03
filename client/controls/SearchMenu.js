@@ -17,7 +17,7 @@ const { DispatchButton } = require("./ActionDispatch")
 const { SearchBox } = require("./SearchBox")
 
 const { setPathsAction } = require("../../lib/util/redux/path")
-const { setEditedAction } = require("../../domain/todo/redux/action")
+const { newRecordAction } = require("../../domain/todo/redux/action")
 
 const useStyles = makeStyles(theme => ({
   sectionDesktop: {
@@ -65,7 +65,7 @@ function Layout({ dispatch, tagFilterString, taskFilterString }) {
         <Toolbar>
           <Grid container spacing={3}>
             <Grid item xs={4}>
-              <DispatchButton color="inherit" invocation={[setEditedAction, "task", undefined]} > New Task</DispatchButton>
+              <DispatchButton color="inherit" invocation={[newRecordAction, "task"]} > New Task</DispatchButton>
             </Grid>
             <Grid item xs={4}>
               <SearchBox placeholder="Tasks..." value={taskFilterString} onChange={event => dispatch(setPathsAction({ "taskFilterString": event.target.value }))} />
