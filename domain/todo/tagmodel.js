@@ -191,6 +191,10 @@ function isTaskActionable(task, now = getNow()) {
   return false
 }
 
+function isTaskOpen(task) {
+  return whenTaskActionable(task) !== null
+}
+
 function isTaskClosed(task) {
   return whenTaskActionable(task) === null
 }
@@ -295,6 +299,11 @@ const compareTaskRelevant = jointComparatorFactory([
   compareTaskActionable,
 ])
 
+const compareTaskTime = jointComparatorFactory([
+  compareTaskActionable,
+  compareTaskPriority,
+])
+
 function relevantNextTasks(series) {
   series = [...series]
   series.sort(compareTaskRelevant)
@@ -340,12 +349,14 @@ module.exports = {
   compareTaskActionable,
   compareTaskPriority,
   compareTaskRelevant,
+  compareTaskTime,
   relevantNextTasks,
   getFirstItem,
   getTagContent,
   getTaskPriority,
   whenTaskActionable,
   isTaskActionable,
+  isTaskOpen,
   isTaskClosed,
   whenTaskDue,
   getNow,

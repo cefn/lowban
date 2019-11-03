@@ -26,9 +26,9 @@ const schemaMap = {
 
 const listMap = {
   filterTags: "tag",
-  filterRelevantTasks: "task",
-  filterPriorityTasks: "task",
-  filterAvailableTasks: "task",
+  tasksByRelevant: "task",
+  tasksByTime: "task",
+  tasksFulfilled: "task",
 }
 
 const propertyNames = {}

@@ -56,7 +56,7 @@ function* ensureEditedRowLoaded() {
 function* ensureFilteredTasksLoaded(listName) {
   yield* selectorChangeSaga(state => state.taskFilterString, function* (taskFilterString) {
     taskFilterString = taskFilterString || ""
-    yield* loadListSaga(`filter${listName}Tasks`, { filter: taskFilterString }, ["id", "label", "tagIds"])
+    yield* loadListSaga(listName, { filter: taskFilterString }, ["id", "label", "tagIds"])
   })
 }
 
@@ -109,9 +109,9 @@ function* rootSaga() {
   yield spawn(ensureEditedSchemaLoaded)
   yield spawn(ensureEditedRowLoaded)
   yield spawn(ensureFilteredTagsLoaded)
-  yield spawn(ensureFilteredTasksLoaded, "Relevant")
-  yield spawn(ensureFilteredTasksLoaded, "Priority")
-  yield spawn(ensureFilteredTasksLoaded, "Actionable")
+  yield spawn(ensureFilteredTasksLoaded, "tasksByRelevant")
+  yield spawn(ensureFilteredTasksLoaded, "tasksByTime")
+  yield spawn(ensureFilteredTasksLoaded, "tasksFulfilled")
   yield spawn(ensureDebouncedSavesSaga)
 }
 

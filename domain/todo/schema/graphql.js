@@ -4,9 +4,10 @@ const { makeExecutableSchema } = require("graphql-tools")
 const {
   storedDataTypes,
   getTagType,
+  isTaskOpen,
+  isTaskClosed,
   compareTaskRelevant,
-  comparePriorityOrder,
-  compareActionableOrder
+  compareTaskTime,
 } = require("../tagmodel")
 const { initialCapital } = require("../../../lib/util/javascript")
 
@@ -70,9 +71,9 @@ const typeDefs = `
     schedule(id:String!): Schedule
     deadline(id:String!): Deadline
     filterTags(filter:String!):[Tag!]
-    filterRelevantTasks(filter:String!):[Task!]
-    filterPriorityTasks(filter:String!):[Task!]
-    filterActionableTasks(filter:String!):[Task!]
+    tasksByRelevant(filter:String!):[Task!]
+    tasksByTime(filter:String!):[Task!]
+    tasksFulfilled(filter:String!):[Task!]
   }
   type Mutation {
     taskMerge (input:TaskInput!): Task
@@ -161,9 +162,9 @@ function resolverFactory(tagStore) {
     ids: (_parent, args) => tagStore.iterateIdsByType(args.type), //lists all ids of a type
     tagList: tagStore.iterateAllTags, //aggregates multiple stored tag types
     filterTags: (_parent, args) => sortBy([...tagStore.iterateFilteredTags(args.filter)], tag => tag.id),
-    filterRelevantTasks: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].sort(compareTaskRelevant),
-    filterPriorityTasks: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].sort(comparePriorityOrder),
-    filterActionableTasks: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].sort(compareActionableOrder)
+    tasksByRelevant: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(isTaskOpen).sort(compareTaskRelevant),
+    tasksByTime: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(isTaskOpen).sort(compareTaskTime),
+    tasksFulfilled: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(isTaskClosed).sort(compareTaskRelevant)
   }
   //...plus query resolvers for each stored type
   for (let storedType of storedDataTypes) {
@@ -186,7 +187,8 @@ function resolverFactory(tagStore) {
         return tagStore.addTaskActionById(id, "snooze", { until })
       },
       taskFulfil: (_parent, args) => {
-        return tagStore.addTaskActionById(args.id, "fulfil")
+        const { id } = args
+        return tagStore.addTaskActionById(id, "fulfil")
       }
     },
     Task: {
