@@ -16,10 +16,14 @@ const dispatchToProps = (dispatch) => ({
   dirty: (item) => dispatch(saveItemAction(item))
 })
 
-function EditedItemForm(props) {
+function EditedItemForm() {
   const bindForm = connect(stateToProps, dispatchToProps)
-  const BoundItemForm = bindForm(ItemForm)
-  return <BoundItemForm {...props} />
+  const BoundItemForm = bindForm(props => {
+    return <React.Fragment>
+      <ItemForm {...props} />
+    </React.Fragment>
+  })
+  return <BoundItemForm />
 }
 
 module.exports = {
