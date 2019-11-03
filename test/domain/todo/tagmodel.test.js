@@ -13,6 +13,7 @@ const {
   storedDataTypes,
   listedDataTypes,
   priorityTypes,
+  priorityLookup,
   periodTypes,
   periodLookupMs,
   iterateTaskTagIds,

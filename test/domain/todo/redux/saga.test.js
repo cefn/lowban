@@ -9,8 +9,8 @@ const {
   loadListSaga,
   ensureEditedSchemaLoaded,
   ensureEditedRowLoaded,
-  ensureFilterTaskListLoaded,
-  ensureFilterTagListLoaded,
+  ensureFilteredTasksLoaded,
+  ensureFilteredTagsLoaded,
   rootSaga,
   launchRootSaga
 } = require("../../../../domain/todo/redux/saga")
