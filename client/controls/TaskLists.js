@@ -57,6 +57,10 @@ function TaskLists() {
     }
   }
 
+  const tabStyle = {
+    minWidth: "64px",
+  }
+
   return (
     <React.Fragment>
       <AppBar position="static" color="default">
@@ -66,18 +70,17 @@ function TaskLists() {
           indicatorColor="primary"
           textColor="primary"
           variant="fullWidth"
-          aria-label="full width tabs example"
         >
-          <Tab label="Relevant" />
-          <Tab label="Actionable" />
+          <Tab label="Relevance" style={tabStyle} />
+          <Tab label="Time" style={tabStyle} />
+          <Tab label="Fulfilled" style={tabStyle} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0} dir={theme.direction}>
-        <NamedItemList listName="filterRelevantTasks" invocationById={[setEditedAction, "task"]} styleByItem={styleTaskByPriority} />
-      </TabPanel>
-      <TabPanel value={value} index={1} dir={theme.direction}>
-        <NamedItemList listName="filterActionableTasks" invocationById={[setEditedAction, "task"]} />
-      </TabPanel>
+      {[...["tasksByRelevant", "tasksByTime", "tasksFulfilled"].entries()].map(([listIndex, listName]) => {
+        return <TabPanel key={listIndex} index={listIndex} value={value} dir={theme.direction}>
+          <NamedItemList listName={listName} type="task" invocationById={[setEditedAction, "task"]} styleByItem={styleTaskByPriority} />
+        </TabPanel>
+      })}
     </React.Fragment>
   )
 }
