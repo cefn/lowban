@@ -53,17 +53,17 @@ function* ensureEditedRowLoaded() {
   })
 }
 
-function* ensureFilterTaskListLoaded() {
+function* ensureFilteredTasksLoaded(listName) {
   yield* selectorChangeSaga(state => state.taskFilterString, function* (taskFilterString) {
     taskFilterString = taskFilterString || ""
-    yield* loadListSaga("filterTask", { filter: taskFilterString })
+    yield* loadListSaga(`filter${listName}Tasks`, { filter: taskFilterString }, ["id", "label", "tagIds"])
   })
 }
 
-function* ensureFilterTagListLoaded() {
+function* ensureFilteredTagsLoaded() {
   yield* selectorChangeSaga(state => state.tagFilterString, function* (tagFilterString) {
     tagFilterString = tagFilterString || ""
-    yield* loadListSaga("filterTag", { filter: tagFilterString })
+    yield* loadListSaga("filterTags", { filter: tagFilterString })
   })
 }
 
@@ -108,8 +108,10 @@ function* ensureDebouncedSavesSaga() {
 function* rootSaga() {
   yield spawn(ensureEditedSchemaLoaded)
   yield spawn(ensureEditedRowLoaded)
-  yield spawn(ensureFilterTaskListLoaded)
-  yield spawn(ensureFilterTagListLoaded)
+  yield spawn(ensureFilteredTagsLoaded)
+  yield spawn(ensureFilteredTasksLoaded, "Relevant")
+  yield spawn(ensureFilteredTasksLoaded, "Priority")
+  yield spawn(ensureFilteredTasksLoaded, "Actionable")
   yield spawn(ensureDebouncedSavesSaga)
 }
 
@@ -132,8 +134,8 @@ module.exports = {
   loadListSaga,
   ensureEditedSchemaLoaded,
   ensureEditedRowLoaded,
-  ensureFilterTaskListLoaded,
-  ensureFilterTagListLoaded,
+  ensureFilterTaskListLoaded: ensureFilteredTasksLoaded,
+  ensureFilterTagListLoaded: ensureFilteredTagsLoaded,
   rootSaga,
   launchRootSaga
 }

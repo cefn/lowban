@@ -51,7 +51,7 @@ function createBackend(host) {
   }
 
   async function loadList(listName, listArgs, listFields) {
-    const resolverName = `${listName}List`
+    const resolverName = listName
     //TODO promote query argument serialisation into graphql util
     const resolverArgs = (!listArgs) ? "" : `(${
       Object.entries(listArgs).map(
@@ -78,6 +78,16 @@ function createBackend(host) {
     const response = await getRemoteResponse(graphqlEndpoint, query, variables)
     const received = response.data[resolverName]
     return editableData(received) //make form-compliant
+  }
+
+  //TODO add implicit 'create' action when id is assigned by database
+
+  async function snoozeTask(id) {
+
+  }
+
+  async function fulfilTask(id) {
+
   }
 
   return {
