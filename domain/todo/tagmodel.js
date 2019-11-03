@@ -44,6 +44,7 @@ const tagTypeByPrefix = {
 const tagTypes = Object.values(tagTypeByPrefix)
 
 let priorityOrder = 0
+//TODO change null priority to !normal to enable prioritisation workflow
 const priorityLookup = {
   "!urgent": { color: "#d50000", order: priorityOrder++ },
   "!soon": { color: "#673ab7", order: priorityOrder++ },
