@@ -26,6 +26,16 @@ class TagStore extends LowStore {
     autoBind(this) //allows use of methods as callbacks
   }
 
+  saveItem(typeName, item) {
+    const previousId = item.id
+    const result = super.saveItem(typeName, item)
+    if (item.id && (!previousId)) { //item was just created
+      this.addTaskActionById(item.id, "create")
+    }
+    return result
+  }
+
+
   lazyCreateTag(tagId) {
     let tagType = getTagType(tagId)
     let tag = this.getById(tagType, tagId)
@@ -128,15 +138,18 @@ class TagStore extends LowStore {
   }
 
   addTaskActionById(taskId, actionType, actionMap) {
-    const actionTable = this.queryTable("task").getById(taskId).get("action")
-    const action = {
-      type: actionType,
-      instant: getNow(),
-      ...actionMap //extra keyed values, possibly overwriting type, instant
-    }
-    actionTable.push(action).write()
+    this.changeTable("task", table =>
+      table.getById(taskId)
+        .thru(task => {
+          task.action = task.action || [] //lazy create array
+          task.action.push({ //add action 
+            type: actionType,
+            instant: getNow(),
+            ...actionMap
+          })
+        })
+    )
   }
-
 }
 
 
