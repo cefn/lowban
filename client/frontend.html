@@ -19,13 +19,19 @@
     </noscript>
     <div id="frontend"></div>
     <script src="/build/frontend.js"></script>
-    <!--prevent scrollbars appearing from Material UI animations -->
+    <!--prevent scrollbars appearing from Material UI animations 
+    -->
     <style>
-        html,
+        html {
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+
         body {
-            overflow: hidden;
+            min-height: 101vh;
         }
     </style>
+
 </body>
 
 </html>
