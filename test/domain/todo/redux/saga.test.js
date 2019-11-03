@@ -9,8 +9,8 @@ const {
   loadListSaga,
   ensureEditedSchemaLoaded,
   ensureEditedRowLoaded,
-  ensureFilterTaskListLoaded,
-  ensureFilterTagListLoaded,
+  ensureFilteredTasksLoaded,
+  ensureFilteredTagsLoaded,
   rootSaga,
   launchRootSaga
 } = require("../../../../domain/todo/redux/saga")
@@ -38,7 +38,6 @@ describe("loadSchema() loads schema for type if not yet set", () => {
       ])
       .hasFinalState({ schemas: { [testType]: schemaMock } })
       .silentRun(10)
-
   })
 
 })

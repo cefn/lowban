@@ -134,8 +134,8 @@ module.exports = {
   loadListSaga,
   ensureEditedSchemaLoaded,
   ensureEditedRowLoaded,
-  ensureFilterTaskListLoaded: ensureFilteredTasksLoaded,
-  ensureFilterTagListLoaded: ensureFilteredTagsLoaded,
+  ensureFilteredTasksLoaded,
+  ensureFilteredTagsLoaded,
   rootSaga,
   launchRootSaga
 }
