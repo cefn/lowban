@@ -80,6 +80,7 @@ const typeDefs = `
     taskFulfil (id:String): Task
     taskSnooze (id:String, until:Int): Task
     tagMerge (input:TagInput!): Tag
+    itemRemove (type:String, id:String): Boolean
   }
 
   # Task to do
@@ -189,6 +190,10 @@ function resolverFactory(tagStore) {
       taskFulfil: (_parent, args) => {
         const { id } = args
         return tagStore.addTaskActionById(id, "fulfil")
+      },
+      itemRemove: (_parent, args) => {
+        const { type, id } = args
+        return tagStore.removeItem(type, id)
       }
     },
     Task: {
