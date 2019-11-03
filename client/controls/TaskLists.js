@@ -12,7 +12,7 @@ const {
 
 const { NamedItemList } = require("./NamedItemList")
 
-const { setEditedAction } = require("../../domain/todo/redux/action")
+const { editRecordAction } = require("../../domain/todo/redux/action")
 
 const { getTaskPriority, priorityLookup } = require("../../domain/todo/tagmodel")
 
@@ -78,7 +78,7 @@ function TaskLists() {
       </AppBar>
       {[...["tasksByRelevant", "tasksByTime", "tasksFulfilled"].entries()].map(([listIndex, listName]) => {
         return <TabPanel key={listIndex} index={listIndex} value={value} dir={theme.direction}>
-          <NamedItemList listName={listName} type="task" invocationById={[setEditedAction, "task"]} styleByItem={styleTaskByPriority} />
+          <NamedItemList listName={listName} type="task" invocationById={[editRecordAction, "task"]} styleByItem={styleTaskByPriority} />
         </TabPanel>
       })}
     </React.Fragment>
