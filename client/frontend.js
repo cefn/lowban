@@ -25,7 +25,7 @@ const {
 function Dash() {
   return (
     <StoreProvider store={reduxStore}>
-      <Grid container spacing={3} >
+      <Grid container spacing={3}>
         <Grid item xs={12}>
           <SearchMenu />
         </Grid>
@@ -39,13 +39,10 @@ function Dash() {
             <TaskLists />
           </Paper>
         </Grid>
-        <Grid item xs={4}>
-          <Paper>
+        <Grid item xs={4} >
+          <Paper >
             <NamedItemList listName="filterTags" invocationById={[filterTasksAction]} />
           </Paper>
-        </Grid>
-        <Grid item xs={12}>
-          <Paper>xs=12</Paper>
         </Grid>
       </Grid>
     </StoreProvider>
