@@ -39,7 +39,10 @@ function* loadListSaga(listName, listArgs = null, listFields = ["id", "label"]) 
 
 function* handleRefreshLocalSaga() {
   const channel = yield actionChannel(REFRESH_LOCAL)
-  yield takeLatest(channel, refreshListsSaga)
+  while (true) {
+    yield take(channel)
+    yield* refreshListsSaga()
+  }
 }
 
 /** Unloads the specified item from the editor if it is currently loaded.
