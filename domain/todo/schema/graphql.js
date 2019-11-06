@@ -6,6 +6,7 @@ const {
   getTagType,
   isTaskOpen,
   isTaskClosed,
+  createIsTaskActionable,
   compareTaskRelevant,
   compareTaskTime,
 } = require("../tagmodel")
@@ -163,9 +164,9 @@ function resolverFactory(tagStore) {
     ids: (_parent, args) => tagStore.iterateIdsByType(args.type), //lists all ids of a type
     tagList: tagStore.iterateAllTags, //aggregates multiple stored tag types
     filterTags: (_parent, args) => sortBy([...tagStore.iterateFilteredTags(args.filter)], tag => tag.id),
-    tasksByRelevant: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(isTaskOpen).sort(compareTaskRelevant),
+    tasksByRelevant: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(createIsTaskActionable()).sort(compareTaskRelevant),
     tasksByTime: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(isTaskOpen).sort(compareTaskTime),
-    tasksFulfilled: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(isTaskClosed).sort(compareTaskRelevant)
+    tasksFulfilled: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(createIsTaskActionable(false)).sort(compareTaskRelevant)
   }
   //...plus query resolvers for each stored type
   for (let storedType of storedDataTypes) {
