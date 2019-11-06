@@ -8,6 +8,8 @@ const { selectorChangeSaga } = require("../../../lib/util/redux/watch")
 const { createBackend } = require("../../../client/backend")
 const { host } = require("../../../server/defaults")
 
+//TODO prefer call to yield* (yield from) for debuggability
+
 const {
   REFRESH_LOCAL,
   REMOVE_ITEM,
@@ -20,16 +22,19 @@ const {
 
 const saveDebounceMs = 1000
 
+/** Causes a schema to be loaded into the store for a type. */
 function* loadSchemaSaga(type) {
   const backend = yield getContext("backend")
   return yield* lazyPopulatePathSaga(getSchemaPath(type), backend.loadSchema, type)
 }
 
+/** Causes a row to be loaded into the store by type and id. */
 function* loadRowSaga(type, id) {
   const backend = yield getContext("backend")
   return yield* lazyPopulatePathSaga(getRowPath(type, id), backend.loadItem, type, id)
 }
 
+/** Causes a list to be loaded into the store by name. */
 function* loadListSaga(listName, listArgs = null, listFields = ["id", "label"]) {
   const backend = yield getContext("backend")
   return yield* populatePathSaga(getListPath(listName), backend.loadList, listName, listArgs, listFields)
@@ -37,16 +42,23 @@ function* loadListSaga(listName, listArgs = null, listFields = ["id", "label"]) 
 
 /** Sagas explicitly triggered by actions */
 
+/** Causes local lists to be refreshed in response to an explicit REFRESH_LOCAL action. */
 function* handleRefreshLocalSaga() {
   const channel = yield actionChannel(REFRESH_LOCAL)
   while (true) {
     yield take(channel)
-    yield* refreshListsSaga()
+    try {
+      yield* refreshListsSaga()
+    }
+    catch (error) {
+      console.log("Error querying lists")
+      console.log(error)
+    }
   }
 }
 
 /** Unloads the specified item from the editor if it is currently loaded.
- * Loads the next relevant task instead.
+ * Loads the task at the top of the 'next' list instead.
 */
 function* unfocusItemSaga(type, id) {
   const editor = yield select(state => state.editor)
