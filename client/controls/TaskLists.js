@@ -71,9 +71,9 @@ function TaskLists() {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab label="Relevance" style={tabStyle} />
-          <Tab label="Time" style={tabStyle} />
-          <Tab label="Fulfilled" style={tabStyle} />
+          <Tab label="Next" style={tabStyle} />
+          <Tab label="Age" style={tabStyle} />
+          <Tab label="Done" style={tabStyle} />
         </Tabs>
       </AppBar>
       {[...["tasksByRelevant", "tasksByTime", "tasksFulfilled"].entries()].map(([listIndex, listName]) => {
