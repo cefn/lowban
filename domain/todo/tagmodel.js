@@ -101,10 +101,12 @@ function getTagContent(tagId) {
   }
 }
 
-/** Retrieve any "priority" tag from a task */
+/** Find a 'blessed' priority tag within a task's tagIds */
 function getTaskPriority(task) {
   for (const tagId of filterTaskTagIdsByType(task, "priority")) {
-    return tagId
+    if (priorityTypes.includes(tagId)) {
+      return tagId
+    }
   }
   return null
 }
@@ -117,6 +119,7 @@ function getTaskPriority(task) {
 function* iterateTaskPeriods(task) {
   for (const scheduleTag of filterTaskTagIdsByType(task, "schedule")) {
     const scheduleSuffix = scheduleTag.slice(1)
+    //TODO add numerical prefixes
     const period = periodLookupMs[scheduleSuffix] //try to interpret as period
     if (period) {
       yield period
@@ -157,8 +160,10 @@ function getNow() {
  * @param {*} task 
  */
 function whenTaskActionable(task, now = getNow()) {
+  const creates = [...filterTaskActionsByType(task, "create")]
   const fulfils = [...filterTaskActionsByType(task, "fulfil")]
   const snoozes = [...filterTaskActionsByType(task, "snooze")]
+  const lastCreate = creates.length ? _.sortBy(creates, "instant").pop() : null
   const lastFulfil = fulfils.length ? _.sortBy(fulfils, "instant").pop() : null
   const lastSnooze = snoozes.length ? _.sortBy(snoozes, "until").pop() : null
   const shortestPeriod = getTaskShortestPeriod(task)
@@ -173,7 +178,10 @@ function whenTaskActionable(task, now = getNow()) {
       actionable = null
     }
   }
-  else { //one off tasks are actionable immediately
+  else if (lastCreate) {
+    return lastCreate.instant
+  }
+  else { //other tasks are actionable immediately
     actionable = now
   }
 
@@ -184,7 +192,12 @@ function whenTaskActionable(task, now = getNow()) {
   return actionable
 }
 
-function isTaskActionable(task, now = getNow()) {
+function createIsTaskActionable(value = true, now = getNow()) {
+  const isTaskActionable = (task) => doIsTaskActionable(task, now) === value
+  return isTaskActionable
+}
+
+function doIsTaskActionable(task, now = getNow()) {
   const actionable = whenTaskActionable(task, now)
   if (actionable) {
     return actionable <= now
@@ -356,7 +369,7 @@ module.exports = {
   getTagContent,
   getTaskPriority,
   whenTaskActionable,
-  isTaskActionable,
+  createIsTaskActionable,
   isTaskOpen,
   isTaskClosed,
   whenTaskDue,
