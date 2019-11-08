@@ -72,7 +72,7 @@ function TaskLists() {
           variant="fullWidth"
         >
           <Tab label="Next" style={tabStyle} />
-          <Tab label="Age" style={tabStyle} />
+          <Tab label="Open" style={tabStyle} />
           <Tab label="Done" style={tabStyle} />
         </Tabs>
       </AppBar>
