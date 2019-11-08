@@ -151,10 +151,13 @@ function* refreshListsSaga() {
 }
 
 function* refreshTaskListsSaga(taskFilterString) {
-  const listNames = ["tasksByRelevant", "tasksByTime", "tasksFulfilled",]
   taskFilterString = taskFilterString || ""
-  for (const listName of listNames) {
-    yield* loadListSaga(listName, { filter: taskFilterString }, ["id", "label", "tagIds"])
+  const listFields = ["id", "label", "tagIds"]
+
+  const filteredListNames = ["tasksByRelevant", "tasksByTime", "tasksFulfilled", "tasksAll"]
+  for (const listName of filteredListNames) {
+    const listArgs = { filter: taskFilterString }
+    yield* loadListSaga(listName, listArgs, listFields)
   }
 }
 

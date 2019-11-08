@@ -75,6 +75,7 @@ const typeDefs = `
     tasksByRelevant(filter:String!):[Task!]
     tasksByTime(filter:String!):[Task!]
     tasksFulfilled(filter:String!):[Task!]
+    tasksAll(filter:String!):[Task!]
   }
   type Mutation {
     taskMerge (input:TaskInput!): Task
@@ -166,7 +167,8 @@ function resolverFactory(tagStore) {
     filterTags: (_parent, args) => sortBy([...tagStore.iterateFilteredTags(args.filter)], tag => tag.id),
     tasksByRelevant: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(createIsTaskActionable()).sort(compareTaskRelevant),
     tasksByTime: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(isTaskOpen).sort(compareTaskTime),
-    tasksFulfilled: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(createIsTaskActionable(false)).sort(compareTaskRelevant)
+    tasksFulfilled: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(createIsTaskActionable(false)).sort(compareTaskRelevant),
+    tasksAll: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)]
   }
   //...plus query resolvers for each stored type
   for (let storedType of storedDataTypes) {

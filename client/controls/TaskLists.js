@@ -74,9 +74,10 @@ function TaskLists() {
           <Tab label="Next" style={tabStyle} />
           <Tab label="Open" style={tabStyle} />
           <Tab label="Done" style={tabStyle} />
+          <Tab label="All" style={tabStyle} />
         </Tabs>
       </AppBar>
-      {[...["tasksByRelevant", "tasksByTime", "tasksFulfilled"].entries()].map(([listIndex, listName]) => {
+      {[...["tasksByRelevant", "tasksByTime", "tasksFulfilled", "tasksAll"].entries()].map(([listIndex, listName]) => {
         return <TabPanel key={listIndex} index={listIndex} value={value} dir={theme.direction}>
           <NamedItemList listName={listName} type="task" invocationById={[editRecordAction, "task"]} styleByItem={styleTaskByPriority} />
         </TabPanel>
