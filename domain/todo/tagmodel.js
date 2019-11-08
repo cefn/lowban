@@ -32,6 +32,8 @@ const tagPattern = (() => {
 const singleTagPattern = new RegExp(`^${tagPattern.source}$`) //pattern with anchors matching only a standalone tag  
 const multipleTagPattern = new RegExp(tagPattern.source, "g") //pattern with global flag returning multiple matches of single tags
 
+const numberPrefixPattern = /([0-9]+)(.*)/
+
 /** Maps prefixes to lowercase tagType names */
 const tagTypeByPrefix = {
   "!": "priority",
@@ -118,11 +120,20 @@ function getTaskPriority(task) {
  */
 function* iterateTaskPeriods(task) {
   for (const scheduleTag of filterTaskTagIdsByType(task, "schedule")) {
-    const scheduleSuffix = scheduleTag.slice(1)
+    let scheduleSuffix = scheduleTag.slice(1)
+    let scheduleMultiple
+    let multipleMatch = scheduleSuffix.match(numberPrefixPattern)
+    if (multipleMatch) {
+      scheduleMultiple = multipleMatch[1]
+      scheduleSuffix = multipleMatch[2]
+    }
+    else {
+      scheduleMultiple = 1
+    }
     //TODO add numerical prefixes
-    const period = periodLookupMs[scheduleSuffix] //try to interpret as period
-    if (period) {
-      yield period
+    const schedulePeriod = periodLookupMs[scheduleSuffix] //try to interpret as period
+    if (schedulePeriod) {
+      yield scheduleMultiple * schedulePeriod
       continue
     }
     throw `Cannot parse ${scheduleTag} as a schedule tag`
@@ -160,33 +171,42 @@ function getNow() {
  * @param {*} task 
  */
 function whenTaskActionable(task, now = getNow()) {
-  const creates = [...filterTaskActionsByType(task, "create")]
-  const fulfils = [...filterTaskActionsByType(task, "fulfil")]
-  const snoozes = [...filterTaskActionsByType(task, "snooze")]
-  const lastCreate = creates.length ? _.sortBy(creates, "instant").pop() : null
-  const lastFulfil = fulfils.length ? _.sortBy(fulfils, "instant").pop() : null
-  const lastSnooze = snoozes.length ? _.sortBy(snoozes, "until").pop() : null
-  const shortestPeriod = getTaskShortestPeriod(task)
+  let actionable
 
-  let actionable = null
+  try {
+    const creates = [...filterTaskActionsByType(task, "create")]
+    const fulfils = [...filterTaskActionsByType(task, "fulfil")]
+    const snoozes = [...filterTaskActionsByType(task, "snooze")]
+    const lastCreate = creates.length ? _.sortBy(creates, "instant").pop() : null
+    const lastFulfil = fulfils.length ? _.sortBy(fulfils, "instant").pop() : null
+    const lastSnooze = snoozes.length ? _.sortBy(snoozes, "until").pop() : null
+    const shortestPeriod = getTaskShortestPeriod(task)
 
-  if (lastFulfil) { //was fulfilled at least once
-    if (shortestPeriod) { //is periodic, will be actionable again
-      actionable = lastFulfil.instant + shortestPeriod //one period after last fulfilment
+
+    if (lastFulfil) { //was fulfilled at least once
+      if (shortestPeriod) { //is periodic, will be actionable again
+        actionable = lastFulfil.instant + shortestPeriod //one period after last fulfilment
+      }
+      else { //not periodic - won't be actionable again
+        actionable = null
+      }
     }
-    else { //not periodic - won't be actionable again
-      actionable = null
+    else if (lastCreate) {
+      return lastCreate.instant
     }
-  }
-  else if (lastCreate) {
-    return lastCreate.instant
-  }
-  else { //other tasks are actionable immediately
-    actionable = now
-  }
 
-  if (actionable !== null && lastSnooze) { //an actionable time might be delayed by snooze
-    actionable = Math.max(actionable, lastSnooze.until)
+    if (actionable !== null && lastSnooze) { //an actionable time might be delayed by snooze
+      actionable = Math.max(actionable, lastSnooze.until)
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+  finally {
+    //fallthrough: tasks are actionable immediately
+    if (actionable === undefined) {
+      actionable = now
+    }
   }
 
   return actionable
@@ -308,15 +328,26 @@ function compareTaskPriority(taskA, taskB) {
   return priorityLookup[priorityA].order - priorityLookup[priorityB].order
 }
 
-const compareTaskRelevant = jointComparatorFactory([
-  compareTaskPriority,
-  compareTaskActionable,
-])
+function errorWrapComparator(comparator) {
+  return function errorWrappedCompare(a, b) {
+    try {
+      return comparator(a, b)
+    }
+    catch (error) {
+      return 0
+    }
+  }
+}
 
-const compareTaskTime = jointComparatorFactory([
+const compareTaskRelevant = errorWrapComparator(jointComparatorFactory([
+  compareTaskPriority,
+  compareTaskActionable,
+]))
+
+const compareTaskTime = errorWrapComparator(jointComparatorFactory([
   compareTaskActionable,
   compareTaskPriority,
-])
+]))
 
 function relevantNextTasks(series) {
   series = [...series]
