@@ -115,7 +115,7 @@ function* handleFulfilledTasksSaga() {
 /** Sagas implicitly triggered by store state change */
 
 function* ensureEditedSchemaLoaded() {
-  yield* selectorChangeSaga(state => state.editor.type, function* (type) {
+  yield* selectorChangeSaga(state => state.editor.type, function* schemaLoader(type) {
     if (type) {
       yield* loadSchemaSaga(type)
     }
@@ -123,7 +123,7 @@ function* ensureEditedSchemaLoaded() {
 }
 
 function* ensureEditedRowLoaded() {
-  yield* selectorChangeSaga(state => state.editor, function* (nextEditor, prevEditor) {
+  yield* selectorChangeSaga(state => state.editor, function* rowLoader(nextEditor, prevEditor) {
     const { type, id, item } = nextEditor
 
     const loadRow = (
@@ -188,38 +188,31 @@ function* ensureDebouncedSavesSaga() {
   //map for new saveTasks to cancel pending saveTasks if same item id (debounce)
   const forkedSaves = {}
   yield* selectorChangeSaga(state => state.editor, function* (editor, prevEditor) {
-    try {
-      const { type, id, item } = editor
-      if (item && (Object.values(item).length > 0)) { //item is non-empty
-        if (item.id) { //it's a known item
-          const loadedRow = yield select(getPathSelector(getRowPath(type, item.id)))
-          if (!isEqual(item, loadedRow)) { //is it different from loaded row
-            const jobName = type + id
-            //unschedule pending saves
-            if (forkedSaves[jobName]) {
-              yield cancel(forkedSaves[jobName])
-              delete forkedSaves[jobName]
-            }
-            //schedule new save in background
-            forkedSaves[jobName] = yield fork(delayedSaveSaga, type, item, saveDebounceMs)
+    const { type, id, item } = editor
+    if (item && (Object.values(item).length > 0)) { //item is non-empty
+      if (item.id) { //it's a known item
+        const loadedRow = yield select(getPathSelector(getRowPath(type, item.id)))
+        if (!isEqual(item, loadedRow)) { //is it different from loaded row
+          const jobName = type + id
+          //unschedule pending saves
+          if (forkedSaves[jobName]) {
+            yield cancel(forkedSaves[jobName])
+            delete forkedSaves[jobName]
           }
-        }
-        else { //it's an anonymous item
-          //save immediately, block and await id
-          const savedItem = yield call(delayedSaveSaga, type, item, 0)
-          //set id in editor record
-          yield put(defaultPathsAction({
-            "editor.id": savedItem.id,
-            "editor.item.id": savedItem.id
-          }))
+          //schedule new save in background
+          forkedSaves[jobName] = yield fork(delayedSaveSaga, type, item, saveDebounceMs)
         }
       }
+      else { //it's an anonymous item
+        //save immediately, block and await id
+        const savedItem = yield call(delayedSaveSaga, type, item, 0)
+        //set id in editor record
+        yield put(defaultPathsAction({
+          "editor.id": savedItem.id,
+          "editor.item.id": savedItem.id
+        }))
+      }
     }
-    catch (error) {
-      console.log("Error querying lists")
-      console.log(error)
-    }
-
   })
 }
 
