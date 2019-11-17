@@ -171,7 +171,7 @@ function getNow() {
  * @param {*} task 
  */
 function whenTaskActionable(task, now = getNow()) {
-  let actionable
+  let whenActionable
 
   try {
     const creates = [...filterTaskActionsByType(task, "create")]
@@ -185,18 +185,18 @@ function whenTaskActionable(task, now = getNow()) {
 
     if (lastFulfil) { //was fulfilled at least once
       if (shortestPeriod) { //is periodic, will be actionable again
-        actionable = lastFulfil.instant + shortestPeriod //one period after last fulfilment
+        whenActionable = lastFulfil.instant + shortestPeriod //one period after last fulfilment
       }
       else { //not periodic - won't be actionable again
-        actionable = null
+        whenActionable = null
       }
     }
     else if (lastCreate) {
       return lastCreate.instant
     }
 
-    if (actionable !== null && lastSnooze) { //an actionable time might be delayed by snooze
-      actionable = Math.max(actionable, lastSnooze.until)
+    if (lastSnooze) {
+      whenActionable = whenActionable ? Math.max(whenActionable, lastSnooze.until) : lastSnooze.until
     }
 
   } catch (error) {
@@ -204,23 +204,23 @@ function whenTaskActionable(task, now = getNow()) {
   }
   finally {
     //fallthrough: tasks are actionable immediately
-    if (actionable === undefined) {
-      actionable = now
+    if (whenActionable === undefined) {
+      whenActionable = now
     }
   }
 
-  return actionable
+  return whenActionable
 }
 
-function createIsTaskActionable(value = true, now = getNow()) {
-  const isTaskActionable = (task) => doIsTaskActionable(task, now) === value
+function createIsTaskActionable(now = getNow()) {
+  const isTaskActionable = (task) => doIsTaskActionable(task, now)
   return isTaskActionable
 }
 
-function doIsTaskActionable(task, now = getNow()) {
-  const actionable = whenTaskActionable(task, now)
-  if (actionable) {
-    return actionable <= now
+function doIsTaskActionable(task, now) {
+  const whenActionable = whenTaskActionable(task, now)
+  if (whenActionable) {
+    return whenActionable <= now
   }
   return false
 }

@@ -1,5 +1,6 @@
 /** TODO add contexts, statuses, priorities */
 const sortBy = require("lodash/sortBy")
+const negate = require("lodash/negate")
 const { makeExecutableSchema } = require("graphql-tools")
 const {
   storedDataTypes,
@@ -167,7 +168,7 @@ function resolverFactory(tagStore) {
     filterTags: (_parent, args) => sortBy([...tagStore.iterateFilteredTags(args.filter)], tag => tag.id),
     tasksByRelevant: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(createIsTaskActionable()).sort(compareTaskRelevant),
     tasksByTime: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(isTaskOpen).sort(compareTaskTime),
-    tasksFulfilled: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(createIsTaskActionable(false)).sort(compareTaskRelevant),
+    tasksFulfilled: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)].filter(negate(createIsTaskActionable())).sort(compareTaskRelevant),
     tasksAll: (_parent, args) => [...tagStore.iterateFilteredTasks(args.filter)]
   }
   //...plus query resolvers for each stored type
