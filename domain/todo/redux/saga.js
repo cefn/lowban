@@ -4,7 +4,7 @@ const { getContext, actionChannel, take, takeLatest, put, select, delay, call, s
 const { launchPathStore } = require("../../../lib/util/redux/path")
 const { defaultState, getSchemaPath, getRowPath, getListPath } = require("./store")
 const { populatePathSaga, lazyPopulatePathSaga, setPathsAction, defaultPathsAction, getPathSelector } = require("../../../lib/util/redux/path")
-const { selectorChangeSaga } = require("../../../lib/util/redux/watch")
+const { selectorChangeSaga, actionSaga } = require("../../../lib/util/redux/watch")
 const { createBackend } = require("../../../client/backend")
 const { host } = require("../../../server/defaults")
 
@@ -44,17 +44,7 @@ function* loadListSaga(listName, listArgs = null, listFields = ["id", "label"]) 
 
 /** Causes local lists to be refreshed in response to an explicit REFRESH_LOCAL action. */
 function* handleRefreshLocalSaga() {
-  const channel = yield actionChannel(REFRESH_LOCAL)
-  while (true) {
-    yield take(channel)
-    try {
-      yield* refreshListsSaga()
-    }
-    catch (error) {
-      console.log("Error querying lists")
-      console.log(error)
-    }
-  }
+  yield* actionSaga(REFRESH_LOCAL, refreshListsSaga)
 }
 
 /** Unloads the specified item from the editor if it is currently loaded.
@@ -77,38 +67,32 @@ function* unfocusItemSaga(type, id) {
 
 function* handleDeletedItemsSaga() {
   const backend = yield getContext("backend")
-  const removeChannel = yield actionChannel(REMOVE_ITEM)
-  while (true) {
-    const removeAction = yield take(removeChannel)
-    const { payload: { type, id } } = removeAction
+  yield* actionSaga(REMOVE_ITEM, function* removeItem(removeItemAction) {
+    const { payload: { type, id } } = removeItemAction
     yield call(backend.removeItem, type, id)
     yield* unfocusItemSaga(type, id)
     yield put(refreshLocalAction())
-  }
+  })
 }
 
 function* handleSnoozedTasksSaga() {
   const backend = yield getContext("backend")
-  const snoozeChannel = yield actionChannel(SNOOZE_TASK)
-  while (true) {
-    const snoozeAction = yield take(snoozeChannel)
-    const { payload: { id, until } } = snoozeAction
+  yield* actionSaga(SNOOZE_TASK, function* snoozeTask(snoozeTaskAction) {
+    const { payload: { id, until } } = snoozeTaskAction
     yield call(backend.snoozeTask, id, until)
     yield* unfocusItemSaga("task", id)
     yield put(refreshLocalAction())
-  }
+  })
 }
 
 function* handleFulfilledTasksSaga() {
   const backend = yield getContext("backend")
-  const fulfilChannel = yield actionChannel(FULFIL_TASK)
-  while (true) {
-    const fulfilAction = yield take(fulfilChannel)
-    const { payload: { id } } = fulfilAction
+  yield* actionSaga(FULFIL_TASK, function* fulfilTask(fulfilTaskAction) {
+    const { payload: { id } } = fulfilTaskAction
     yield call(backend.fulfilTask, id)
     yield* unfocusItemSaga("task", id)
     yield put(refreshLocalAction())
-  }
+  })
 }
 
 
