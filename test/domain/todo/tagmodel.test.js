@@ -29,7 +29,7 @@ const {
   getTagContent,
   getTaskPriority,
   whenTaskActionable,
-  isTaskActionable,
+  createIsTaskActionable,
   isTaskClosed,
   whenTaskDue,
   getNow,
@@ -190,11 +190,11 @@ test("getNow() resolves to a Date", () => {
 test("whenTaskActionable() returns now by default", () => {
   const task = {}
   const minuteInMs = 60000
-  const actionable = whenTaskActionable(task)
-  const actionableMinute = ~~(actionable / minuteInMs)
+  const whenActionable = whenTaskActionable(task)
+  const whenActionableMinute = ~~(whenActionable / minuteInMs)
   const now = getNow()
   const nowMinute = ~~(now / minuteInMs)
-  expect(nowMinute).toEqual(actionableMinute)
+  expect(nowMinute).toEqual(whenActionableMinute)
 })
 
 test("whenTaskActionable() returns null if task is fulfilled and not periodic", () => {
@@ -213,8 +213,8 @@ test("whenTaskActionable() last fulfil instant plus period if task periodic", ()
       }
     ]
   }
-  const actionable = whenTaskActionable(task)
-  expect(fakeNow - actionable).toEqual(oneDayInMs)
+  const whenActionable = whenTaskActionable(task)
+  expect(fakeNow - whenActionable).toEqual(oneDayInMs)
 })
 
 test("whenTaskActionable() delayed until snooze expiry", () => {
@@ -233,43 +233,53 @@ test("whenTaskActionable() delayed until snooze expiry", () => {
       }
     ]
   }
-  const actionable = whenTaskActionable(task)
-  expect(actionable).toEqual(fakeNow + twoWeeksInMs)
+  const whenActionable = whenTaskActionable(task)
+  expect(whenActionable).toEqual(fakeNow + twoWeeksInMs)
 })
 
 test("isTaskActionable() returns false for task whose actionable time has not yet come", () => {
   const now = getNow()
   const task = { action: [{ type: "snooze", until: now + oneDayInMs }] }
+  const isTaskActionable = createIsTaskActionable(now)
   expect(isTaskActionable(task)).toBe(false)
 })
 
-test("isTaskActionable() returns true for task after snooze has expired", () => {
+test("gumpf", () => {
   const now = getNow()
   const task = { action: [{ type: "snooze", until: now - oneDayInMs }] }
-  expect(isTaskActionable(task)).toBe(true)
+  const isTaskActionable = createIsTaskActionable(now)
+  const isActionable = isTaskActionable(task)
+  expect(isActionable).toBe(true)
 })
 
 test("isTaskActionable() returns false for task which has been fulfilled", () => {
+  const now = getNow()
   const task = { action: [{ type: "fulfil" }] }
+  const isTaskActionable = createIsTaskActionable(now)
   expect(isTaskActionable(task)).toBe(false)
 })
 
 test("isTaskActionable() returns false for fulfilled periodic task before period has passed", () => {
+  const now = getNow()
   const task = {
     tagIds: ["~daily"],
-    action: [{ type: "fulfil", instant: getNow() - (0.5 * oneDayInMs) }]
+    action: [{ type: "fulfil", instant: now - (0.5 * oneDayInMs) }]
   }
+  const isTaskActionable = createIsTaskActionable(now)
   expect(isTaskActionable(task)).toBe(false)
 })
 
 test("isTaskActionable() returns true for fulfilled periodic task after period has passed", () => {
+  const now = getNow()
   const task = {
     tagIds: ["~daily"],
-    action: [{ type: "fulfil", instant: getNow() - (2 * oneDayInMs) }]
+    action: [{ type: "fulfil", instant: now - (2 * oneDayInMs) }]
   }
+  const isTaskActionable = createIsTaskActionable(now)
   expect(isTaskActionable(task)).toBe(true)
 })
 
+//TODO add test for period multiples e.g. ~3daily
 
 test("isTaskClosed() returns true for fulfilled task if not periodic", () => {
   const task = { action: [{ type: "fulfil" }] }

@@ -5,6 +5,16 @@
 Change row to item throughout (items are nested - not table rows)
 Normalise tags into single tag schema file like action.schema.json
 
+### Statuses
+
+Possible statuses which would cause items to be hidden from 'next' view, but be visible in a tab of their own
+
+#Wait
+#Ref
+#Done
+#Trash
+#Maybe
+
 ### Milestones
 
 Allow editing of tags
@@ -18,6 +28,7 @@ Add more detail to item views (actionable date, tags ?)
 Keyboard shortcuts:
     * Navigation between panes in edit (e.g. SHIFT+ALT+L label, SHIFT+ALT+N notes, SHIFT+ALT+T tags)
 
+Order tags with non-alphanumeric prefixes first
 
 # Notes from Olga
 

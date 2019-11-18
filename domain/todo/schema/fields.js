@@ -29,6 +29,7 @@ const listMap = {
   tasksByRelevant: "task",
   tasksByTime: "task",
   tasksFulfilled: "task",
+  tasksAll: "task",
 }
 
 const propertyNames = {}

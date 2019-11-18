@@ -3,7 +3,7 @@ const { mode } = require("./server/defaults")
 
 module.exports = {
   mode: mode,
-  devtool: "eval-source-map",
+  devtool: "source-map",
   entry: {
     "main": "client/frontend.js"
   },

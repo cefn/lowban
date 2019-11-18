@@ -1,11 +1,12 @@
 const React = require("react")
 const PropTypes = require("prop-types")
-const { useTheme } = require("@material-ui/core/styles")
+const { useTheme, withStyles } = require("@material-ui/core/styles")
 
 const {
   AppBar,
   Tabs,
   Tab,
+  Badge,
   Typography,
   Box
 } = require("@material-ui/core")
@@ -15,6 +16,14 @@ const { NamedItemList } = require("./NamedItemList")
 const { editRecordAction } = require("../../domain/todo/redux/action")
 
 const { getTaskPriority, priorityLookup } = require("../../domain/todo/tagmodel")
+
+const TabBadge = withStyles(theme => ({
+  badge: {
+    right: "-2em",
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}))(Badge)
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -71,7 +80,9 @@ function TaskLists() {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab label="Next" style={tabStyle} />
+          <Tab label={<TabBadge badgeContent={"TODO"} anchorOrigin={{ vertical: "bottom", horizontal: "right" }} color="secondary">
+            Next
+          </TabBadge>} style={tabStyle} />
           <Tab label="Open" style={tabStyle} />
           <Tab label="Done" style={tabStyle} />
           <Tab label="All" style={tabStyle} />
