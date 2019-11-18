@@ -32,7 +32,7 @@ const tagPattern = (() => {
 const singleTagPattern = new RegExp(`^${tagPattern.source}$`) //pattern with anchors matching only a standalone tag  
 const multipleTagPattern = new RegExp(tagPattern.source, "g") //pattern with global flag returning multiple matches of single tags
 
-const numberPrefixPattern = /([0-9]+)(.*)/
+const numberPrefixPattern = /([0-9]+(?:\.[0-9]+)?)(.*)/
 
 /** Maps prefixes to lowercase tagType names */
 const tagTypeByPrefix = {
