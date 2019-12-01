@@ -1,4 +1,5 @@
 const { setPathsAction } = require("../../../lib/util/redux/path")
+const { getNow, periodLookupMs } = require("../tagmodel")
 
 const REFRESH_LOCAL = "refresh-local"
 const REMOVE_ITEM = "remove-item"
@@ -24,6 +25,9 @@ function removeItemAction(type, id) {
 }
 
 function snoozeTaskAction(id, until) {
+  if (!until) {
+    until = getNow() + periodLookupMs["daily"]
+  }
   return {
     type: SNOOZE_TASK,
     payload: {

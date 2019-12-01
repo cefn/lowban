@@ -34,10 +34,13 @@ function EditedItemForm(props) {
       buttonBar = (
         <Toolbar>
           <Grid container spacing={3}>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <DispatchButton variant="contained" color="inherit" invocation={[removeItemAction, type, id]}>Delete</DispatchButton>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
+              <DispatchButton variant="contained" color="inherit" invocation={[snoozeTaskAction, id]}>Snooze</DispatchButton>
+            </Grid>
+            <Grid item xs={4}>
               <DispatchButton variant="contained" color="primary" invocation={[fulfilTaskAction, id]}>Fulfil</DispatchButton>
             </Grid>
           </Grid>
