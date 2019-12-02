@@ -192,7 +192,7 @@ function whenTaskActionable(task, now = getNow()) {
       }
     }
     else if (lastCreate) {
-      return lastCreate.instant
+      whenActionable = lastCreate.instant
     }
 
     if (lastSnooze) {

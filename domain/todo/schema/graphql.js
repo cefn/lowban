@@ -42,10 +42,10 @@ const taskInputFields =
 `
 
 const actionOutputFields = `  type:String
-  instant: Int`
+  instant: Float`
 
 const snoozeActionOutputFields = actionOutputFields + `
-  until: Int`
+  until: Float`
 
 const tagOutputFields = entityOutputFields
 
@@ -81,7 +81,7 @@ const typeDefs = `
   type Mutation {
     taskMerge (input:TaskInput!): Task
     taskFulfil (id:String): Task
-    taskSnooze (id:String, until:Int): Task
+    taskSnooze (id:String, until:Float): Task
     tagMerge (input:TagInput!): Tag
     itemRemove (type:String, id:String): Boolean
   }
@@ -133,7 +133,7 @@ const typeDefs = `
 
   interface Action {
     type:String
-    instant:Int
+    instant:Float
   }
 
   type Create implements Action {

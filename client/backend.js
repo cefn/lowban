@@ -57,7 +57,7 @@ function createBackend(host) {
       Object.entries(listArgs).map(
         ([name, value]) => `${name}:${JSON.stringify(value)}`
       ).join(",")
-      })`
+    })`
     const resolverFields = listFields.join(" ")
     const query = `{ ${resolverName}${resolverArgs} { ${resolverFields} } }`
     const response = await getRemoteResponse(graphqlEndpoint, query)
@@ -92,10 +92,10 @@ function createBackend(host) {
 
   //TODO add implicit 'create' action when id is assigned by database
 
-  async function snoozeTask(id) {
+  async function snoozeTask(id, until) {
     const resolverName = "taskSnooze"
     let query = `mutation {
-      ${resolverName}(id:${JSON.stringify(id)}){
+      ${resolverName}(id:${JSON.stringify(id)},until:${JSON.stringify(until)}){
         id
       }
     }`
