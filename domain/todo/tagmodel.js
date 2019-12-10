@@ -195,7 +195,7 @@ function whenTaskActionable(task, now = getNow()) {
       whenActionable = lastCreate.instant
     }
 
-    if (lastSnooze) {
+    if (whenActionable && lastSnooze) {
       whenActionable = whenActionable ? Math.max(whenActionable, lastSnooze.until) : lastSnooze.until
     }
 
