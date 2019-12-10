@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm-run-all --parallel watch-client watch-server",
-    "watch-server": "babel-watch --exclude db.json app.js",
+    "watch-server": "babel-watch --exclude db.json app.js bbc.json",
     "build-client": "webpack",
     "watch-client": "webpack --watch",
     "test": "jest --silent",
